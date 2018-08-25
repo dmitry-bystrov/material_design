@@ -8,4 +8,5 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="main_activity">Main activity</string>
     <string name="settings_activity">Settings activity</string>
+    <string name="error_camera">Error: Camera is not available</string>
 </resources>
