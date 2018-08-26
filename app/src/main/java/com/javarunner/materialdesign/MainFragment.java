@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +38,17 @@ public class MainFragment extends Fragment {
                 }
             }
         });
+
+        File[] files = filesDir.listFiles();
+        PhotoInfo[] photoInfoArray = new PhotoInfo[files.length];
+        for (int i = 0; i < files.length; i++) {
+            photoInfoArray[i] = new PhotoInfo(files[i]);
+        }
+
+        RecyclerView recyclerView = getActivity().findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setAdapter(new PhotoListAdapter(photoInfoArray));
     }
 
     @Override
