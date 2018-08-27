@@ -7,12 +7,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ToggleButton;
 
-public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.ViewHolder>{
-    PhotoInfo[] photoInfoArray;
+import java.util.List;
+
+public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.ViewHolder> {
+    private List<PhotoInfo> photoInfoList;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
+
         ToggleButton favoriteButton;
 
         public ViewHolder(View itemView) {
@@ -21,10 +24,11 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
             imageView = itemView.findViewById(R.id.image_view);
             favoriteButton = itemView.findViewById(R.id.button_favorite);
         }
+
     }
 
-    public PhotoListAdapter(PhotoInfo[] photoInfoArray) {
-        this.photoInfoArray = photoInfoArray;
+    public PhotoListAdapter(List<PhotoInfo> photoInfoList) {
+        this.photoInfoList = photoInfoList;
     }
 
     @Override
@@ -36,14 +40,23 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.imageView.setImageBitmap(PhotoUtils
-                .getScaledBitmap(photoInfoArray[position].getPhotoFile().getPath(),
-                        600,
-                        600));
-        holder.favoriteButton.setChecked(photoInfoArray[position].isFavorite());
+                .getScaledBitmap(photoInfoList.get(position).getPhotoFile().getPath(),
+                        //TODO: Проставить реальные размеры ImageView
+                        960,
+                        960));
+        holder.favoriteButton.setChecked(photoInfoList.get(position).isFavorite());
     }
 
     @Override
     public int getItemCount() {
-        return photoInfoArray.length;
+        return photoInfoList.size();
+    }
+
+    public List<PhotoInfo> getData() {
+        return photoInfoList;
+    }
+
+    public void setData(List<PhotoInfo> photoInfoList) {
+        this.photoInfoList = photoInfoList;
     }
 }
