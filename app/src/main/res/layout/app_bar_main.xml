@@ -21,9 +21,10 @@
     </android.support.design.widget.AppBarLayout>
 
     <fragment
-        android:name="com.javarunner.materialdesign.MainFragment"
         android:id="@+id/fragment_main"
+        android:name="com.javarunner.materialdesign.MainFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>
