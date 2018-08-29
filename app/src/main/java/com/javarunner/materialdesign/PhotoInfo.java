@@ -1,18 +1,16 @@
 package com.javarunner.materialdesign;
 
-import java.io.File;
-
 public class PhotoInfo {
-    private File photoFile;
+    private String photoFilePath;
     private boolean favorite;
 
-    public PhotoInfo(File photoFile) {
-        this.photoFile = photoFile;
+    public PhotoInfo(String photoFilePath) {
+        this.photoFilePath = photoFilePath;
         this.favorite = false;
     }
 
-    public File getPhotoFile() {
-        return photoFile;
+    public String getPhotoFilePath() {
+        return photoFilePath;
     }
 
     public boolean isFavorite() {

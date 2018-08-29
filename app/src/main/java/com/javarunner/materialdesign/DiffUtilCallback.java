@@ -5,8 +5,8 @@ import android.support.v7.util.DiffUtil;
 import java.util.List;
 
 public class DiffUtilCallback extends DiffUtil.Callback {
-    List<PhotoInfo> oldList;
-    List<PhotoInfo> newList;
+    private List<PhotoInfo> oldList;
+    private List<PhotoInfo> newList;
 
     public DiffUtilCallback(List<PhotoInfo> oldList, List<PhotoInfo> newList) {
         this.oldList = oldList;
@@ -25,11 +25,11 @@ public class DiffUtilCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getPhotoFile().equals(newList.get(newItemPosition).getPhotoFile());
+        return oldList.get(oldItemPosition).getPhotoFilePath().equals(newList.get(newItemPosition).getPhotoFilePath());
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getPhotoFile().equals(newList.get(newItemPosition).getPhotoFile());
+        return oldList.get(oldItemPosition).getPhotoFilePath().equals(newList.get(newItemPosition).getPhotoFilePath());
     }
 }

@@ -1,5 +1,6 @@
 package com.javarunner.materialdesign;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,8 @@ import java.util.List;
 public class MainFragment extends Fragment {
 
     private static final int REQUEST_CODE = 100;
+    public static final String PHOTO_FILE_PATH = "photo_file_path";
+    private View fragmentView;
     private File filesDir;
     private File photoFile;
     private PhotoListAdapter photoListAdapter;
@@ -30,6 +34,12 @@ public class MainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         filesDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (savedInstanceState != null) {
+            String photoFilePath = savedInstanceState.getString(MainFragment.PHOTO_FILE_PATH);
+            if (photoFilePath != null) {
+                photoFile = new File(photoFilePath);
+            }
+        }
 
         RecyclerView recyclerView = getActivity().findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -37,16 +47,24 @@ public class MainFragment extends Fragment {
         photoListAdapter = new PhotoListAdapter(PhotoUtils.getPhotoInfoList(filesDir));
         recyclerView.setAdapter(photoListAdapter);
 
+        photoListAdapter.setOnItemClickListener(new PhotoListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(getActivity(), PhotoViewActivity.class);
+                intent.putExtra(PHOTO_FILE_PATH, photoListAdapter.getPhotoInfo(position).getPhotoFilePath());
+                startActivity(intent);
+            }
+        });
+
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 photoFile = new File(filesDir, PhotoUtils.getPhotoFilename());
-
                 Intent cameraIntent = PhotoUtils.getCameraIntent(getActivity(), photoFile);
 
                 if (cameraIntent == null) {
-                    Snackbar.make(view, getString(R.string.error_camera), Snackbar.LENGTH_LONG).show();
+                    showSnackbar(R.string.error_camera);
                 } else {
                     startActivityForResult(cameraIntent, REQUEST_CODE);
                 }
@@ -55,27 +73,34 @@ public class MainFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (photoFile != null) {
+            outState.putString(PHOTO_FILE_PATH, photoFile.getPath());
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
             PhotoUtils.revokeUriPermission(getActivity(), photoFile);
-
-            List<PhotoInfo> newPhotoInfoList = new ArrayList<>(photoListAdapter.getData());
-            newPhotoInfoList.add(new PhotoInfo(photoFile));
-
-            DiffUtilCallback diffUtilCallback =
-                    new DiffUtilCallback(photoListAdapter.getData(), newPhotoInfoList);
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-
-            photoListAdapter.setData(newPhotoInfoList);
-            diffResult.dispatchUpdatesTo(photoListAdapter);
+            photoListAdapter.addPhotoToList(photoFile.getPath());
+            showSnackbar(R.string.photo_added);
         }
+    }
+
+    private void showSnackbar(int messageId) {
+        Snackbar.make(fragmentView,
+                getString(messageId),
+                Snackbar.LENGTH_LONG).show();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_main, container, false);
+        return fragmentView;
     }
 }
