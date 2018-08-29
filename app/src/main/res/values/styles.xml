@@ -4,28 +4,24 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textSize">@dimen/default_text_size</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.BrownCyanTheme">
+        <item name="colorPrimary">@color/brown_cyan_primary</item>
+        <item name="colorPrimaryDark">@color/brown_cyan_primary_dark</item>
+        <item name="colorAccent">@color/brown_cyan_accent</item>
+    </style>
+
+    <style name="AppTheme.CyanDeepOrangeTheme">
+        <item name="colorPrimary">@color/cyan_deep_orange_primary</item>
+        <item name="colorPrimaryDark">@color/cyan_deep_orange_primary_dark</item>
+        <item name="colorAccent">@color/cyan_deep_orange_accent</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="BrownCyanTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/brown_cyan_primary</item>
-        <item name="colorPrimaryDark">@color/brown_cyan_primary_dark</item>
-        <item name="colorAccent">@color/brown_cyan_accent</item>
-        <item name="android:textSize">@dimen/default_text_size</item>
-    </style>
-
-    <style name="CyanDeepOrangeTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/cyan_deep_orange_primary</item>
-        <item name="colorPrimaryDark">@color/cyan_deep_orange_primary_dark</item>
-        <item name="colorAccent">@color/cyan_deep_orange_accent</item>
-        <item name="android:textSize">@dimen/default_text_size</item>
-    </style>
 </resources>

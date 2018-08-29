@@ -1,45 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
-    android:orientation="vertical"
     tools:context=".SettingsActivity">
 
-    <TextView
+    <include layout="@layout/app_bar_layout" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/select_the_color_theme"
-        android:textSize="16sp" />
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <RadioButton
-            android:id="@+id/default_theme"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
-            android:layout_marginTop="16dp"
-            android:text="@string/default_theme" />
+            android:layout_marginBottom="8dp"
+            android:text="@string/select_the_color_theme"
+            android:textSize="16sp" />
 
-        <RadioButton
-            android:id="@+id/brown_cyan_theme"
+        <RadioGroup
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/brown_cyan_theme" />
+            android:layout_height="wrap_content">
 
-        <RadioButton
-            android:id="@+id/cyan_deep_orange_theme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/cyan_deep_orange_theme" />
+            <RadioButton
+                android:id="@+id/rb_default_theme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:checked="true"
+                android:text="@string/default_theme" />
 
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/rb_brown_cyan_theme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/brown_cyan_theme" />
 
-</LinearLayout>
+            <RadioButton
+                android:id="@+id/rb_cyan_deep_orange_theme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/cyan_deep_orange_theme" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>
