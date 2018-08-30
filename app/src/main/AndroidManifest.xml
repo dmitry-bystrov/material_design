@@ -34,5 +34,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <activity android:name=".ViewPagerActivity"></activity>
     </application>
+
 </manifest>

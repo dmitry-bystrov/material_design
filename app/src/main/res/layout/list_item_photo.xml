@@ -8,8 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="1dp"
-        android:adjustViewBounds="true"
-        android:background="?attr/selectableItemBackgroundBorderless" />
+        android:adjustViewBounds="true" />
 
     <ToggleButton
         android:id="@+id/button_favorite"

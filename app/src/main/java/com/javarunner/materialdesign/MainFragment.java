@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,7 +19,7 @@ import java.io.File;
 public class MainFragment extends Fragment {
 
     private static final int REQUEST_CODE = 100;
-    public static final String PHOTO_FILE_PATH = "photo_file_path";
+    public static final String IMAGE_FILE_PATH = "photo_file_path";
     private static final String FILE_DELETE_DIALOG = "file_delete_dialog";
     private File photoFile;
     private PhotoListAdapter photoListAdapter;
@@ -43,7 +42,7 @@ public class MainFragment extends Fragment {
 
     private void restoreFile(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            String photoFilePath = savedInstanceState.getString(MainFragment.PHOTO_FILE_PATH);
+            String photoFilePath = savedInstanceState.getString(MainFragment.IMAGE_FILE_PATH);
             if (photoFilePath != null) {
                 photoFile = new File(photoFilePath);
             }
@@ -54,8 +53,9 @@ public class MainFragment extends Fragment {
         photoListAdapter.setOnItemClickListener(new PhotoListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(), PhotoViewActivity.class);
-                intent.putExtra(PHOTO_FILE_PATH, photoListAdapter.getPhotoInfo(position).getImageFilePath());
+                //Intent intent = new Intent(getActivity(), PhotoViewActivity.class);
+                Intent intent = new Intent(getActivity(), ViewPagerActivity.class);
+                intent.putExtra(IMAGE_FILE_PATH, photoListAdapter.getPhotoInfo(position).getImageFilePath());
                 startActivity(intent);
             }
 
@@ -98,7 +98,7 @@ public class MainFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (photoFile != null) {
-            outState.putString(PHOTO_FILE_PATH, photoFile.getPath());
+            outState.putString(IMAGE_FILE_PATH, photoFile.getPath());
         }
     }
 
