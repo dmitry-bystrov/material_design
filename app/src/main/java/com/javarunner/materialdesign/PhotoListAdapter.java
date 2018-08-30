@@ -96,14 +96,9 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
             return;
         }
 
-        if (photoInfoList.size() == 0) {
-            photoInfoList.add(new PhotoInfo(path));
-            notifyDataSetChanged();
-        } else {
-            List<PhotoInfo> newPhotoInfoList = new ArrayList<>(photoInfoList);
-            newPhotoInfoList.add(new PhotoInfo(path));
-            dispatchUpdates(newPhotoInfoList);
-        }
+        List<PhotoInfo> newPhotoInfoList = new ArrayList<>(photoInfoList);
+        newPhotoInfoList.add(new PhotoInfo(path));
+        dispatchUpdates(newPhotoInfoList);
     }
 
     public void deletePhotoFromList(int position) {
