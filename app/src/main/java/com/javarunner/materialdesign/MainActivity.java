@@ -14,11 +14,15 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
+    private int currentTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        currentTheme = ThemeUtils.getThemeResourceId();
+        setTheme(currentTheme);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -30,6 +34,15 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (currentTheme != ThemeUtils.getThemeResourceId()) {
+            startActivity(new Intent(this, getClass()));
+            finish();
+        }
     }
 
     @Override

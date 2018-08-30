@@ -1,5 +1,5 @@
 # Add project specific ProGuard rules here.
-# You can control the set of applied configuration external_file_path using the
+# You can control the set of applied configuration file_paths using the
 # proguardFiles setting in build.gradle.
 #
 # For more details, see
