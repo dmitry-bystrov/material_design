@@ -9,5 +9,10 @@
     <string name="main_activity">Main activity</string>
     <string name="settings_activity">Settings activity</string>
     <string name="error_camera">Error: Camera is not available</string>
-    <string name="photo_added">Photo added successfully</string>
+    <string name="photo_added">Image file was added successfully</string>
+    <string name="photo_deleted">Image file was deleted successfully</string>
+    <string name="accept">Accept</string>
+    <string name="cancel">Cancel</string>
+    <string name="image_file_will_be_deleted">Image file will be deleted from all locations, both image gallery and storage device.</string>
+    <string name="are_you_sure">Are you sure?</string>
 </resources>

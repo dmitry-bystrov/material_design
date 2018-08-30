@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -19,17 +16,26 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class PhotoUtils {
+public class ImageFileUtils {
 
     private static final String FILEPROVIDER_AUTHORITY = "com.javarunner.materialdesign.fileprovider";
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.ROOT);
 
-    public static String getPhotoFilename() {
+    public static String getNewFilename() {
         return String.format("%s%s%s", "IMG_", simpleDateFormat.format(new Date()), ".jpg");
     }
 
-    public static List<PhotoInfo> getPhotoInfoList(File filesDir) {
-        File[] files = filesDir.listFiles();
+    public static File getFilesDir() {
+        File filesDir = AppClass.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (filesDir == null) {
+            filesDir = AppClass.getContext().getFilesDir();
+        }
+
+        return filesDir;
+    }
+
+    public static List<PhotoInfo> getPhotoInfoList() {
+        File[] files = getFilesDir().listFiles();
         List<PhotoInfo> photoInfoList = new ArrayList<>();
 
         if (files != null) {
@@ -39,6 +45,10 @@ public class PhotoUtils {
         }
 
         return photoInfoList;
+    }
+
+    public static boolean deleteImageFile(String path) {
+        return new File(path).delete();
     }
 
     public static Intent getCameraIntent(Activity activity, File photoFile) {
@@ -52,7 +62,7 @@ public class PhotoUtils {
         Uri uri = FileProvider.getUriForFile(activity, FILEPROVIDER_AUTHORITY, photoFile);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         List<ResolveInfo> cameraActivities = packageManager.queryIntentActivities(cameraIntent,
-                        PackageManager.MATCH_DEFAULT_ONLY);
+                PackageManager.MATCH_DEFAULT_ONLY);
         for (ResolveInfo cameraActivity : cameraActivities) {
             activity.grantUriPermission(cameraActivity.activityInfo.packageName,
                     uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);

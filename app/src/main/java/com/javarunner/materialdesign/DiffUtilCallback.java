@@ -25,11 +25,11 @@ public class DiffUtilCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getPhotoFilePath().equals(newList.get(newItemPosition).getPhotoFilePath());
+        return oldList.get(oldItemPosition).getImageFilePath().equals(newList.get(newItemPosition).getImageFilePath());
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getPhotoFilePath().equals(newList.get(newItemPosition).getPhotoFilePath());
+        return oldList.get(oldItemPosition).getImageFilePath().equals(newList.get(newItemPosition).getImageFilePath());
     }
 }

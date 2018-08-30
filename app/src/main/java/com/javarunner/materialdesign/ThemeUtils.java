@@ -9,7 +9,7 @@ public class ThemeUtils {
     private static final String FILE_NAME = "shared_preferences";
 
     private static SharedPreferences getSharedPreferences() {
-        return ApplicationClass.getContext().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        return AppClass.getContext().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
     }
 
     public static void saveSelectedTheme(int theme) {

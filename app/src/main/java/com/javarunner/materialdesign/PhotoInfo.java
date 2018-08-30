@@ -9,7 +9,7 @@ public class PhotoInfo {
         this.favorite = false;
     }
 
-    public String getPhotoFilePath() {
+    public String getImageFilePath() {
         return photoFilePath;
     }
 
