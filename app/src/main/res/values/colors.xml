@@ -4,7 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="colorBackground">#222222</color>
+    <color name="colorBackground">#333333</color>
+    <color name="colorBackgroundLight">#CCCCCC</color>
 
     <color name="brown_cyan_primary">#795548</color>
     <color name="brown_cyan_primary_dark">#5D4037</color>
