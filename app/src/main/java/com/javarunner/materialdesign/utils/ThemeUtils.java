@@ -1,7 +1,10 @@
-package com.javarunner.materialdesign;
+package com.javarunner.materialdesign.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.javarunner.materialdesign.AppClass;
+import com.javarunner.materialdesign.R;
 
 public class ThemeUtils {
 

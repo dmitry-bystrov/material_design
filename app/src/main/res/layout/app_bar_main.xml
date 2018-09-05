@@ -5,13 +5,13 @@
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <include layout="@layout/app_bar_layout" />
 
     <fragment
         android:id="@+id/fragment_main"
-        android:name="com.javarunner.materialdesign.MainFragment"
+        android:name="com.javarunner.materialdesign.fragments.MainFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

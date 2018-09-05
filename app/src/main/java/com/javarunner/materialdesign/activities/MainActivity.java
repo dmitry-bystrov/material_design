@@ -1,4 +1,4 @@
-package com.javarunner.materialdesign;
+package com.javarunner.materialdesign.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.javarunner.materialdesign.R;
+import com.javarunner.materialdesign.utils.ThemeUtils;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

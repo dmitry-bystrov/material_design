@@ -1,6 +1,8 @@
-package com.javarunner.materialdesign;
+package com.javarunner.materialdesign.adapters;
 
 import android.support.v7.util.DiffUtil;
+
+import com.javarunner.materialdesign.models.PhotoInfo;
 
 import java.util.List;
 
@@ -25,11 +27,11 @@ public class DiffUtilCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getImageFilePath().equals(newList.get(newItemPosition).getImageFilePath());
+        return oldList.get(oldItemPosition).getFilePath().equals(newList.get(newItemPosition).getFilePath());
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getImageFilePath().equals(newList.get(newItemPosition).getImageFilePath());
+        return oldList.get(oldItemPosition).getFilePath().equals(newList.get(newItemPosition).getFilePath());
     }
 }

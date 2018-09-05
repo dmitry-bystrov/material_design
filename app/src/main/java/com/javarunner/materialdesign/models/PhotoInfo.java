@@ -1,16 +1,16 @@
-package com.javarunner.materialdesign;
+package com.javarunner.materialdesign.models;
 
 public class PhotoInfo {
-    private String photoFilePath;
+    private String filePath;
     private boolean favorite;
 
-    public PhotoInfo(String photoFilePath) {
-        this.photoFilePath = photoFilePath;
+    public PhotoInfo(String filePath) {
+        this.filePath = filePath;
         this.favorite = false;
     }
 
-    public String getImageFilePath() {
-        return photoFilePath;
+    public String getFilePath() {
+        return filePath;
     }
 
     public boolean isFavorite() {

@@ -1,4 +1,4 @@
-package com.javarunner.materialdesign;
+package com.javarunner.materialdesign.fragments;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -13,6 +13,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.javarunner.materialdesign.R;
+import com.javarunner.materialdesign.activities.ViewPagerActivity;
+import com.javarunner.materialdesign.adapters.PhotoListAdapter;
+import com.javarunner.materialdesign.utils.FileUtils;
 
 import java.io.File;
 
@@ -36,7 +41,7 @@ public class MainFragment extends Fragment {
         RecyclerView recyclerView = getActivity().findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        photoListAdapter = new PhotoListAdapter(ImageFileUtils.getPhotoInfoList());
+        photoListAdapter = new PhotoListAdapter(FileUtils.getPhotoInfoList());
         recyclerView.setAdapter(photoListAdapter);
     }
 
@@ -55,7 +60,7 @@ public class MainFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 //Intent intent = new Intent(getActivity(), PhotoViewActivity.class);
                 Intent intent = new Intent(getActivity(), ViewPagerActivity.class);
-                intent.putExtra(IMAGE_FILE_PATH, photoListAdapter.getPhotoInfo(position).getImageFilePath());
+                intent.putExtra(IMAGE_FILE_PATH, photoListAdapter.getPhotoInfo(position).getFilePath());
                 startActivity(intent);
             }
 
@@ -65,8 +70,8 @@ public class MainFragment extends Fragment {
                 fileDeleteDialog.setOnButtonClickListener(new FileDeleteDialog.OnButtonClickListener() {
                     @Override
                     public void onButtonClick(DialogInterface dialog, int which) {
-                        String imageFilePath = photoListAdapter.getPhotoInfo(position).getImageFilePath();
-                        if (ImageFileUtils.deleteImageFile(imageFilePath)) {
+                        String imageFilePath = photoListAdapter.getPhotoInfo(position).getFilePath();
+                        if (FileUtils.deleteImageFile(imageFilePath)) {
                             photoListAdapter.deletePhotoFromList(position);
                             showSnackbar(R.string.photo_deleted);
                         }
@@ -82,8 +87,8 @@ public class MainFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                photoFile = new File(ImageFileUtils.getFilesDir(), ImageFileUtils.getNewFilename());
-                Intent cameraIntent = ImageFileUtils.getCameraIntent(getActivity(), photoFile);
+                photoFile = new File(FileUtils.getFilesDir(), FileUtils.getNewFilename());
+                Intent cameraIntent = FileUtils.getCameraIntent(getActivity(), photoFile);
 
                 if (cameraIntent == null) {
                     showSnackbar(R.string.error_camera);
@@ -107,7 +112,7 @@ public class MainFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
-            ImageFileUtils.revokeUriPermission(getActivity(), photoFile);
+            FileUtils.revokeUriPermission(getActivity(), photoFile);
             photoListAdapter.addPhotoToList(photoFile.getPath());
             showSnackbar(R.string.photo_added);
         }

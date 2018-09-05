@@ -1,4 +1,4 @@
-package com.javarunner.materialdesign;
+package com.javarunner.materialdesign.utils;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +9,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 
+import com.javarunner.materialdesign.AppClass;
+import com.javarunner.materialdesign.models.PhotoInfo;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class ImageFileUtils {
+public class FileUtils {
 
     private static final String FILEPROVIDER_AUTHORITY = "com.javarunner.materialdesign.fileprovider";
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.ROOT);

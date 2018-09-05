@@ -1,4 +1,4 @@
-package com.javarunner.materialdesign;
+package com.javarunner.materialdesign.adapters;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.javarunner.materialdesign.models.PhotoInfo;
+import com.javarunner.materialdesign.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -43,7 +45,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         ImageView imageView = pagerItemView.findViewById(R.id.image_view);
         Picasso.get()
-                .load(new File(photoInfoList.get(position).getImageFilePath()))
+                .load(new File(photoInfoList.get(position).getFilePath()))
                 .fit()
                 .centerInside()
                 .into(imageView);
@@ -54,7 +56,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     public int findItemPosition(String path) {
         for (int i = 0; i < photoInfoList.size(); i++) {
-            if (photoInfoList.get(i).getImageFilePath().equals(path)) {
+            if (photoInfoList.get(i).getFilePath().equals(path)) {
                 return i;
             }
         }

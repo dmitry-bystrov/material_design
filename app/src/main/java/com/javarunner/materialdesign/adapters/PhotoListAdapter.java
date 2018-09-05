@@ -1,14 +1,15 @@
-package com.javarunner.materialdesign;
+package com.javarunner.materialdesign.adapters;
 
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ToggleButton;
 
+import com.javarunner.materialdesign.models.PhotoInfo;
+import com.javarunner.materialdesign.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -70,7 +71,7 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Picasso.get()
-                .load(new File(photoInfoList.get(position).getImageFilePath()))
+                .load(new File(photoInfoList.get(position).getFilePath()))
                 .fit()
                 .centerCrop()
                 .into(holder.imageView);
@@ -89,7 +90,7 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
 
     public void addPhotoToList(String path) {
         if (photoInfoList.size() > 0
-                && photoInfoList.get(photoInfoList.size() - 1).getImageFilePath().equals(path)) {
+                && photoInfoList.get(photoInfoList.size() - 1).getFilePath().equals(path)) {
             // может получиться так, что новая фотография уже
             // попала в список во время пересоздания активити
             // в таком случае повторно добавлять её туда не нужно

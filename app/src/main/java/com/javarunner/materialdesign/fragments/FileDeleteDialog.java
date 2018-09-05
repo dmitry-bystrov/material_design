@@ -1,4 +1,4 @@
-package com.javarunner.materialdesign;
+package com.javarunner.materialdesign.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+
+import com.javarunner.materialdesign.R;
 
 public class FileDeleteDialog extends DialogFragment {
     private OnButtonClickListener onButtonClickListener;

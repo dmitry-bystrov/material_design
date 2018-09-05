@@ -1,9 +1,12 @@
-package com.javarunner.materialdesign;
+package com.javarunner.materialdesign.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.javarunner.materialdesign.fragments.MainFragment;
+import com.javarunner.materialdesign.R;
+import com.javarunner.materialdesign.utils.ThemeUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
