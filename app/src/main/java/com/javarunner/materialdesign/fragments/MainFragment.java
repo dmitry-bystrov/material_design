@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,6 @@ import com.javarunner.materialdesign.utils.CameraUtils;
 import com.javarunner.materialdesign.utils.ImageFilesUtils;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainFragment extends Fragment {
@@ -35,9 +35,20 @@ public class MainFragment extends Fragment {
     private File photoFile;
     private PhotoListAdapter photoListAdapter;
 
+    public static MainFragment newInstance() {
+        return new MainFragment();
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d("MMDD", "MainFragment - onCreate");
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
 

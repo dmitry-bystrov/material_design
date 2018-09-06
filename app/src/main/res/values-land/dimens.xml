@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="gallery_columns">4</integer>
-    <dimen name="gallery_image_height">160dp</dimen>
+    <dimen name="gallery_image_height">156dp</dimen>
     <dimen name="gallery_toggle_layout_height">40dp</dimen>
 </resources>

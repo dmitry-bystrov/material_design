@@ -17,4 +17,8 @@
     <string name="cancel">Cancel</string>
     <string name="image_file_will_be_deleted">Image file will be deleted from all locations, both image gallery and storage device.</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="database">Database</string>
+    <string name="network">Network</string>
+    <string name="common">Common</string>
+    <string name="favorite">Favorite</string>
 </resources>
