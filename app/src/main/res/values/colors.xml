@@ -14,4 +14,8 @@
     <color name="cyan_deep_orange_primary">#00BCD4</color>
     <color name="cyan_deep_orange_primary_dark">#0097A7</color>
     <color name="cyan_deep_orange_accent">#FF5722</color>
+
+    <color name="blue_grey_orange_primary">#607D8B</color>
+    <color name="blue_grey_orange_primary_dark">#455A64</color>
+    <color name="blue_grey_orange_accent">#FF5722</color>
 </resources>

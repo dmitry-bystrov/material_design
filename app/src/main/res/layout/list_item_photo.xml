@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="200dp">
+    android:layout_height="@dimen/gallery_image_height">
 
     <ImageView
         android:id="@+id/image_view"
@@ -10,16 +10,24 @@
         android:layout_margin="1dp"
         android:adjustViewBounds="true" />
 
-    <ToggleButton
-        android:id="@+id/button_favorite"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="8dp"
-        android:background="@drawable/button_favorite"
-        android:checked="false"
-        android:text=""
-        android:textOff=""
-        android:textOn="" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gallery_toggle_layout_height"
+        android:layout_gravity="bottom"
+        android:background="#66444444">
+
+        <ToggleButton
+            android:id="@+id/button_favorite"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center|end"
+            android:layout_margin="8dp"
+            android:background="@drawable/button_favorite"
+            android:checked="false"
+            android:text=""
+            android:textOff=""
+            android:textOn="" />
+
+    </FrameLayout>
 
 </FrameLayout>

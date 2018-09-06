@@ -1,8 +1,10 @@
 <resources>
+    <string name="fileprovider">com.javarunner.materialdesign.fileprovider</string>
     <string name="app_name">MaterialDesign</string>
     <string name="default_theme">Default theme</string>
     <string name="brown_cyan_theme">Brown - cyan theme</string>
     <string name="cyan_deep_orange_theme">Cyan - deep orange theme</string>
+    <string name="blue_grey_orange_theme">Blue grey - orange theme</string>
     <string name="select_the_color_theme">Select the color theme</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

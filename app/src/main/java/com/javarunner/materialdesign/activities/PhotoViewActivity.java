@@ -16,7 +16,7 @@ public class PhotoViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(ThemeUtils.getThemeResourceId());
+        setTheme(ThemeUtils.getThemeStyleResourceID());
         setContentView(R.layout.activity_photo_view);
 
         Bundle bundle = getIntent().getExtras();

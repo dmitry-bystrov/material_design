@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,18 +17,29 @@ import android.view.ViewGroup;
 
 import com.javarunner.materialdesign.R;
 import com.javarunner.materialdesign.activities.ViewPagerActivity;
+import com.javarunner.materialdesign.adapters.DiffUtilCallback;
 import com.javarunner.materialdesign.adapters.PhotoListAdapter;
-import com.javarunner.materialdesign.utils.FileUtils;
+import com.javarunner.materialdesign.models.PhotoInfo;
+import com.javarunner.materialdesign.utils.CameraUtils;
+import com.javarunner.materialdesign.utils.ImageFilesUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainFragment extends Fragment {
-
     private static final int REQUEST_CODE = 100;
+
     public static final String IMAGE_FILE_PATH = "photo_file_path";
     private static final String FILE_DELETE_DIALOG = "file_delete_dialog";
     private File photoFile;
     private PhotoListAdapter photoListAdapter;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_main, container, false);
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -40,8 +52,8 @@ public class MainFragment extends Fragment {
     private void setupRecyclerView() {
         RecyclerView recyclerView = getActivity().findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        photoListAdapter = new PhotoListAdapter(FileUtils.getPhotoInfoList());
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.gallery_columns)));
+        photoListAdapter = new PhotoListAdapter(ImageFilesUtils.getPhotoInfoList());
         recyclerView.setAdapter(photoListAdapter);
     }
 
@@ -58,9 +70,9 @@ public class MainFragment extends Fragment {
         photoListAdapter.setOnItemClickListener(new PhotoListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                //Intent intent = new Intent(getActivity(), PhotoViewActivity.class);
-                Intent intent = new Intent(getActivity(), ViewPagerActivity.class);
-                intent.putExtra(IMAGE_FILE_PATH, photoListAdapter.getPhotoInfo(position).getFilePath());
+                //Intent intent = new Intent(getActivity(), PhotoViewActivity.class); // открыть фото в полный размер в новой активити
+                Intent intent = new Intent(getActivity(), ViewPagerActivity.class); // открыть фото в полный размер во вьюпейджере
+                intent.putExtra(IMAGE_FILE_PATH, ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position));
                 startActivity(intent);
             }
 
@@ -70,9 +82,9 @@ public class MainFragment extends Fragment {
                 fileDeleteDialog.setOnButtonClickListener(new FileDeleteDialog.OnButtonClickListener() {
                     @Override
                     public void onButtonClick(DialogInterface dialog, int which) {
-                        String imageFilePath = photoListAdapter.getPhotoInfo(position).getFilePath();
-                        if (FileUtils.deleteImageFile(imageFilePath)) {
-                            photoListAdapter.deletePhotoFromList(position);
+                        String imageFilePath = ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position);
+                        if (ImageFilesUtils.deleteFile(imageFilePath)) {
+                            dispatchUpdates(ImageFilesUtils.removeItemFromList(photoListAdapter.getPhotoInfoList(), position));
                             showSnackbar(R.string.photo_deleted);
                         }
                     }
@@ -87,8 +99,8 @@ public class MainFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                photoFile = new File(FileUtils.getFilesDir(), FileUtils.getNewFilename());
-                Intent cameraIntent = FileUtils.getCameraIntent(getActivity(), photoFile);
+                photoFile = new File(ImageFilesUtils.getFilesDir(), ImageFilesUtils.getNewFilename());
+                Intent cameraIntent = CameraUtils.getCameraIntent(getActivity(), photoFile);
 
                 if (cameraIntent == null) {
                     showSnackbar(R.string.error_camera);
@@ -112,8 +124,8 @@ public class MainFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
-            FileUtils.revokeUriPermission(getActivity(), photoFile);
-            photoListAdapter.addPhotoToList(photoFile.getPath());
+            CameraUtils.revokeUriPermission(getActivity(), photoFile);
+            dispatchUpdates(ImageFilesUtils.getPhotoInfoList());
             showSnackbar(R.string.photo_added);
         }
     }
@@ -124,9 +136,12 @@ public class MainFragment extends Fragment {
                 Snackbar.LENGTH_SHORT).show();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+    private void dispatchUpdates(List<PhotoInfo> newPhotoInfoList) {
+        DiffUtilCallback diffUtilCallback =
+                new DiffUtilCallback(photoListAdapter.getPhotoInfoList(), newPhotoInfoList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
+        photoListAdapter.setPhotoInfoList(newPhotoInfoList);
+        diffResult.dispatchUpdatesTo(photoListAdapter);
     }
+
 }
