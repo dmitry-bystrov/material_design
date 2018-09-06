@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentTheme = ThemeUtils.getThemeResourceId();
+        currentTheme = ThemeUtils.getThemeStyleResourceID();
         setTheme(currentTheme);
         setContentView(R.layout.activity_main);
 
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (currentTheme != ThemeUtils.getThemeResourceId()) {
+        if (currentTheme != ThemeUtils.getThemeStyleResourceID()) {
             startActivity(new Intent(this, getClass()));
             finish();
         }

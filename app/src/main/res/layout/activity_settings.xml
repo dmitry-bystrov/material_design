@@ -48,6 +48,13 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/cyan_deep_orange_theme" />
 
+            <RadioButton
+                android:id="@+id/rb_blue_grey_orange_theme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/blue_grey_orange_theme" />
+
         </RadioGroup>
 
     </LinearLayout>

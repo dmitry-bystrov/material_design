@@ -15,7 +15,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(ThemeUtils.getThemeResourceId());
+        setTheme(ThemeUtils.getThemeStyleResourceID());
         setContentView(R.layout.activity_settings);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -24,8 +24,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.rb_default_theme).setOnClickListener(this);
         findViewById(R.id.rb_brown_cyan_theme).setOnClickListener(this);
         findViewById(R.id.rb_cyan_deep_orange_theme).setOnClickListener(this);
+        findViewById(R.id.rb_blue_grey_orange_theme).setOnClickListener(this);
 
-        RadioButton radioButton = findViewById(ThemeUtils.getSelectedTheme());
+        RadioButton radioButton = findViewById(ThemeUtils.getSelectedButtonResourceID());
 
         if (radioButton != null) {
             radioButton.setChecked(true);

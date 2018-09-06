@@ -54,13 +54,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         return pagerItemView;
     }
 
-    public int findItemPosition(String path) {
-        for (int i = 0; i < photoInfoList.size(); i++) {
-            if (photoInfoList.get(i).getFilePath().equals(path)) {
-                return i;
-            }
-        }
-
-        return -1;
+    public List<PhotoInfo> getPhotoInfoList() {
+        return photoInfoList;
     }
 }

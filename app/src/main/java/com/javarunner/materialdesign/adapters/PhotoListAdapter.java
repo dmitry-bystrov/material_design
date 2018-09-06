@@ -1,6 +1,5 @@
 package com.javarunner.materialdesign.adapters;
 
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,12 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ToggleButton;
 
-import com.javarunner.materialdesign.models.PhotoInfo;
 import com.javarunner.materialdesign.R;
+import com.javarunner.materialdesign.models.PhotoInfo;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.ViewHolder> {
@@ -50,10 +48,13 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
         }
 
     }
+
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
+
         boolean onLongClick(View view, int position);
     }
+
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
@@ -84,35 +85,11 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
         return photoInfoList.size();
     }
 
-    public PhotoInfo getPhotoInfo(int position) {
-        return photoInfoList.get(position);
+    public List<PhotoInfo> getPhotoInfoList() {
+        return photoInfoList;
     }
 
-    public void addPhotoToList(String path) {
-        if (photoInfoList.size() > 0
-                && photoInfoList.get(photoInfoList.size() - 1).getFilePath().equals(path)) {
-            // может получиться так, что новая фотография уже
-            // попала в список во время пересоздания активити
-            // в таком случае повторно добавлять её туда не нужно
-            return;
-        }
-
-        List<PhotoInfo> newPhotoInfoList = new ArrayList<>(photoInfoList);
-        newPhotoInfoList.add(new PhotoInfo(path));
-        dispatchUpdates(newPhotoInfoList);
-    }
-
-    public void deletePhotoFromList(int position) {
-        List<PhotoInfo> newPhotoInfoList = new ArrayList<>(photoInfoList);
-        newPhotoInfoList.remove(position);
-        dispatchUpdates(newPhotoInfoList);
-    }
-
-    private void dispatchUpdates(List<PhotoInfo> newPhotoInfoList) {
-        DiffUtilCallback diffUtilCallback =
-                new DiffUtilCallback(photoInfoList, newPhotoInfoList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-        photoInfoList = newPhotoInfoList;
-        diffResult.dispatchUpdatesTo(this);
+    public void setPhotoInfoList(List<PhotoInfo> photoInfoList) {
+        this.photoInfoList = photoInfoList;
     }
 }
