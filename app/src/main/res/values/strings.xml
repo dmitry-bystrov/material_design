@@ -1,5 +1,9 @@
 <resources>
     <string name="fileprovider">com.javarunner.materialdesign.fileprovider</string>
+    <string name="favorite_preference">favorite_preference</string>
+    <string name="theme_preference">theme_preference</string>
+    <string name="image_file_path">photo_file_path</string>
+    <string name="shared_preferences_filename">shared_preferences</string>
     <string name="app_name">MaterialDesign</string>
     <string name="default_theme">Default theme</string>
     <string name="brown_cyan_theme">Brown - cyan theme</string>
@@ -17,4 +21,9 @@
     <string name="cancel">Cancel</string>
     <string name="image_file_will_be_deleted">Image file will be deleted from all locations, both image gallery and storage device.</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="database">Database</string>
+    <string name="network">Network</string>
+    <string name="common">Common</string>
+    <string name="favorite">Favorite</string>
+    <string name="file_delete_dialog">file_delete_dialog</string>
 </resources>

@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ToggleButton;
 
@@ -45,14 +46,21 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
                     return itemClickListener.onLongClick(v, getAdapterPosition());
                 }
             });
+
+            favoriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    itemClickListener.onFavoriteCheckedChanged(isChecked, getAdapterPosition());
+                }
+            });
         }
 
     }
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
-
         boolean onLongClick(View view, int position);
+        void onFavoriteCheckedChanged(boolean isChecked, int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
