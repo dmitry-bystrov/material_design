@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("MMDD", "MainFragment - onCreate");
+        restoreFile(savedInstanceState);
     }
 
     @Nullable
@@ -53,31 +52,24 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        restoreFile(savedInstanceState);
-        setupRecyclerView();
-        setupListeners();
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupRecyclerView(view);
     }
 
-    private void setupRecyclerView() {
-        RecyclerView recyclerView = getActivity().findViewById(R.id.recycler_view);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setupFloatingActionButton();
+    }
+
+    private void setupRecyclerView(View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.gallery_columns)));
         photoListAdapter = new PhotoListAdapter(ImageFilesUtils.getPhotoInfoList());
         recyclerView.setAdapter(photoListAdapter);
-    }
 
-    private void restoreFile(@Nullable Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            String photoFilePath = savedInstanceState.getString(MainFragment.IMAGE_FILE_PATH);
-            if (photoFilePath != null) {
-                photoFile = new File(photoFilePath);
-            }
-        }
-    }
-
-    private void setupListeners() {
         photoListAdapter.setOnItemClickListener(new PhotoListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -105,7 +97,18 @@ public class MainFragment extends Fragment {
                 return true;
             }
         });
+    }
 
+    private void restoreFile(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            String photoFilePath = savedInstanceState.getString(MainFragment.IMAGE_FILE_PATH);
+            if (photoFilePath != null) {
+                photoFile = new File(photoFilePath);
+            }
+        }
+    }
+
+    private void setupFloatingActionButton() {
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

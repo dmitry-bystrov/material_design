@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -27,17 +28,19 @@ public class MainActivity extends AppCompatActivity
     private static final String SELECTED_ITEM_ID = "selected_item_id";
 
     enum FragmentTag {
-        COMMON("fragment_common", R.id.action_common),
-        DATABASE("fragment_database", R.id.action_database),
-        NETWORK("fragment_network", R.id.action_network),
-        FAVORITE("fragment_favorite", R.id.action_favorite);
+        COMMON("fragment_common", R.id.action_common, true),
+        DATABASE("fragment_database", R.id.action_database, false),
+        NETWORK("fragment_network", R.id.action_network, false),
+        FAVORITE("fragment_favorite", R.id.action_favorite, false);
 
         private final String tag;
         private final int menuItemID;
+        private boolean showFloatActionButton;
 
-        FragmentTag(String tag, int menuItemID) {
+        FragmentTag(String tag, int menuItemID, boolean showFloatActionButton) {
             this.tag = tag;
             this.menuItemID = menuItemID;
+            this.showFloatActionButton = showFloatActionButton;
         }
 
         public String getTag() {
@@ -46,6 +49,10 @@ public class MainActivity extends AppCompatActivity
 
         public int getMenuItemID() {
             return menuItemID;
+        }
+
+        public boolean showFloatActionButton() {
+            return showFloatActionButton;
         }
 
         public static FragmentTag findByMenuItemID(int menuItemID) {
@@ -138,6 +145,13 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, fragment, fragmentTag.getTag());
         transaction.commit();
+
+        FloatingActionButton floatingActionButton = findViewById(R.id.fab);
+        if (fragmentTag.showFloatActionButton()) {
+            floatingActionButton.show();
+        } else {
+            floatingActionButton.hide();
+        }
     }
 
     @Override
@@ -159,7 +173,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.menu_main) {
