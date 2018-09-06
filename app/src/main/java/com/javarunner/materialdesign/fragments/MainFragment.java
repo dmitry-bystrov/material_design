@@ -28,9 +28,6 @@ import java.util.List;
 
 public class MainFragment extends Fragment {
     private static final int REQUEST_CODE = 100;
-
-    public static final String IMAGE_FILE_PATH = "photo_file_path";
-    private static final String FILE_DELETE_DIALOG = "file_delete_dialog";
     private File photoFile;
     private PhotoListAdapter photoListAdapter;
 
@@ -75,7 +72,7 @@ public class MainFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 //Intent intent = new Intent(getActivity(), PhotoViewActivity.class); // открыть фото в полный размер в новой активити
                 Intent intent = new Intent(getActivity(), ViewPagerActivity.class); // открыть фото в полный размер во вьюпейджере
-                intent.putExtra(IMAGE_FILE_PATH, ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position));
+                intent.putExtra(getString(R.string.image_file_path), ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position));
                 startActivity(intent);
             }
 
@@ -88,20 +85,29 @@ public class MainFragment extends Fragment {
                         String imageFilePath = ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position);
                         if (ImageFilesUtils.deleteFile(imageFilePath)) {
                             dispatchUpdates(ImageFilesUtils.removeItemFromList(photoListAdapter.getPhotoInfoList(), position));
-                            showSnackbar(R.string.photo_deleted);
+                            showSnackBar(R.string.photo_deleted);
                         }
                     }
                 });
 
-                fileDeleteDialog.show(getFragmentManager(), FILE_DELETE_DIALOG);
+                fileDeleteDialog.show(getFragmentManager(), getString(R.string.file_delete_dialog));
                 return true;
+            }
+
+            @Override
+            public void onFavoriteCheckedChanged(boolean isChecked, int position) {
+                if (isChecked) {
+                    ImageFilesUtils.addToFavoriteList(ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position));
+                } else {
+                    ImageFilesUtils.removeFromFavoriteList(ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position));
+                }
             }
         });
     }
 
     private void restoreFile(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            String photoFilePath = savedInstanceState.getString(MainFragment.IMAGE_FILE_PATH);
+            String photoFilePath = savedInstanceState.getString(getString(R.string.image_file_path));
             if (photoFilePath != null) {
                 photoFile = new File(photoFilePath);
             }
@@ -117,7 +123,7 @@ public class MainFragment extends Fragment {
                 Intent cameraIntent = CameraUtils.getCameraIntent(getActivity(), photoFile);
 
                 if (cameraIntent == null) {
-                    showSnackbar(R.string.error_camera);
+                    showSnackBar(R.string.error_camera);
                 } else {
                     startActivityForResult(cameraIntent, REQUEST_CODE);
                 }
@@ -129,7 +135,7 @@ public class MainFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (photoFile != null) {
-            outState.putString(IMAGE_FILE_PATH, photoFile.getPath());
+            outState.putString(getString(R.string.image_file_path), photoFile.getPath());
         }
     }
 
@@ -140,11 +146,11 @@ public class MainFragment extends Fragment {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
             CameraUtils.revokeUriPermission(getActivity(), photoFile);
             dispatchUpdates(ImageFilesUtils.getPhotoInfoList());
-            showSnackbar(R.string.photo_added);
+            showSnackBar(R.string.photo_added);
         }
     }
 
-    private void showSnackbar(int messageId) {
+    private void showSnackBar(int messageId) {
         Snackbar.make(getActivity().findViewById(R.id.coordinator_layout),
                 getString(messageId),
                 Snackbar.LENGTH_SHORT).show();

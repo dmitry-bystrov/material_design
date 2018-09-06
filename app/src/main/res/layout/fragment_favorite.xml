@@ -6,10 +6,17 @@
     tools:context=".fragments.FavoriteFragment">
 
     <ImageView
+        android:id="@+id/image_view"
         android:layout_width="@dimen/background_icon_size"
         android:layout_height="@dimen/background_icon_size"
         android:layout_gravity="center"
         android:background="@drawable/ic_favorite_24dp"
         android:backgroundTint="@color/grey" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="2dp" />
 
 </FrameLayout>

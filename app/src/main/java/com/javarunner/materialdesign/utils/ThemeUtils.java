@@ -7,10 +7,6 @@ import com.javarunner.materialdesign.AppClass;
 import com.javarunner.materialdesign.R;
 
 public class ThemeUtils {
-
-    private static final String THEME_PREFERENCE = "theme_preference";
-    private static final String FILE_NAME = "shared_preferences";
-
     enum Theme {
         DEFAULT(0, R.style.AppTheme, R.id.rb_default_theme),
         BROWN(1, R.style.AppTheme_BrownCyanTheme, R.id.rb_brown_cyan_theme),
@@ -56,18 +52,23 @@ public class ThemeUtils {
         }
     }
 
+    private static String getPreferenceKey() {
+        return AppClass.getContext().getString(R.string.theme_preference);
+    }
+
     private static SharedPreferences getSharedPreferences() {
-        return AppClass.getContext().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        return AppClass.getContext().getSharedPreferences(getPreferenceKey(), Context.MODE_PRIVATE);
     }
 
     public static void saveSelectedTheme(int radioButtonResourceID) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putInt(THEME_PREFERENCE, Theme.getThemeByButtonResourceID(radioButtonResourceID).getThemeID());
+        editor.clear();
+        editor.putInt(getPreferenceKey(), Theme.getThemeByButtonResourceID(radioButtonResourceID).getThemeID());
         editor.apply();
     }
 
     private static int getSavedThemeID() {
-        return getSharedPreferences().getInt(THEME_PREFERENCE, 0);
+        return getSharedPreferences().getInt(getPreferenceKey(), 0);
     }
 
     public static int getSelectedButtonResourceID() {

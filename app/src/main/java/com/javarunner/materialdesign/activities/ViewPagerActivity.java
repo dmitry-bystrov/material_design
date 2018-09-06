@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.javarunner.materialdesign.fragments.MainFragment;
 import com.javarunner.materialdesign.R;
 import com.javarunner.materialdesign.utils.ImageFilesUtils;
 import com.javarunner.materialdesign.utils.ThemeUtils;
@@ -24,7 +23,7 @@ public class ViewPagerActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            String imageFilePath = bundle.getString(MainFragment.IMAGE_FILE_PATH);
+            String imageFilePath = bundle.getString(getString(R.string.image_file_path));
             if (imageFilePath != null) {
                 int position = ImageFilesUtils.findItemPosition(viewPagerAdapter.getPhotoInfoList(), imageFilePath);
                 if (position != -1) {

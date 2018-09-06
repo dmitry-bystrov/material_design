@@ -4,9 +4,9 @@ public class PhotoInfo {
     private String filePath;
     private boolean favorite;
 
-    public PhotoInfo(String filePath) {
+    public PhotoInfo(String filePath, boolean favorite) {
         this.filePath = filePath;
-        this.favorite = false;
+        this.favorite = favorite;
     }
 
     public String getFilePath() {
