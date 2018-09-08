@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fileprovider">com.javarunner.materialdesign.fileprovider</string>
+    <string name="favorite_preference">favorite_preference</string>
+    <string name="theme_preference">theme_preference</string>
+    <string name="image_file_path">photo_file_path</string>
+    <string name="file_delete_dialog">file_delete_dialog</string>
+    <string name="shared_preferences_filename">shared_preferences</string>
+</resources>
