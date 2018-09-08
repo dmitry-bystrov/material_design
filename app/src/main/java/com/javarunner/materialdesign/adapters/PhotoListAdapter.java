@@ -85,8 +85,10 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        String filePath = photoInfoList.get(position).getFilePath();
+        holder.imageView.setTransitionName(filePath);
         Picasso.get()
-                .load(new File(photoInfoList.get(position).getFilePath()))
+                .load(new File(filePath))
                 .fit()
                 .centerCrop()
                 .into(holder.imageView);

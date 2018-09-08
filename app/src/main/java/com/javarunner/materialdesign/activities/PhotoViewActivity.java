@@ -23,7 +23,12 @@ public class PhotoViewActivity extends AppCompatActivity {
             String photoFilePath = bundle.getString(getString(R.string.image_file_path));
             if (photoFilePath != null) {
                 ImageView imageView = findViewById(R.id.image_view);
-                Picasso.get().load(new File(photoFilePath)).fit().centerCrop().into(imageView);
+                imageView.setTransitionName(photoFilePath);
+                Picasso.get()
+                        .load(new File(photoFilePath))
+                        .fit()
+                        .centerInside()
+                        .into(imageView);
             }
         }
     }

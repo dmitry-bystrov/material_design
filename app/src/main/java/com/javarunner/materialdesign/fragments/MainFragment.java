@@ -1,6 +1,7 @@
 package com.javarunner.materialdesign.fragments;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -70,9 +71,14 @@ public class MainFragment extends Fragment {
         photoListAdapter.setOnItemClickListener(new PhotoListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                String filePath = ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position);
+//                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
+//                        view, filePath);
+
                 //Intent intent = new Intent(getActivity(), PhotoViewActivity.class); // открыть фото в полный размер в новой активити
                 Intent intent = new Intent(getActivity(), ViewPagerActivity.class); // открыть фото в полный размер во вьюпейджере
-                intent.putExtra(getString(R.string.image_file_path), ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position));
+                intent.putExtra(getString(R.string.image_file_path), filePath);
+                //startActivity(intent, options.toBundle());
                 startActivity(intent);
             }
 

@@ -44,8 +44,10 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .inflate(R.layout.pager_item_photo, container, false);
 
         ImageView imageView = pagerItemView.findViewById(R.id.image_view);
+        String filePath = photoInfoList.get(position).getFilePath();
+        imageView.setTransitionName(filePath);
         Picasso.get()
-                .load(new File(photoInfoList.get(position).getFilePath()))
+                .load(new File(filePath))
                 .fit()
                 .centerInside()
                 .into(imageView);
