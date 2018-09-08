@@ -12,16 +12,15 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/gallery_toggle_layout_height"
+        android:layout_height="@dimen/min_touch_target_size"
         android:layout_gravity="bottom"
         android:background="#66444444">
 
         <ToggleButton
             android:id="@+id/button_favorite"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/min_touch_target_size"
+            android:layout_height="@dimen/min_touch_target_size"
             android:layout_gravity="center|end"
-            android:layout_margin="8dp"
             android:background="@drawable/button_favorite"
             android:checked="false"
             android:text=""

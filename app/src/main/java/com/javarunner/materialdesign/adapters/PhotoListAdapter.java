@@ -1,5 +1,6 @@
 package com.javarunner.materialdesign.adapters;
 
+import android.graphics.drawable.StateListDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,13 +54,18 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
                     itemClickListener.onFavoriteCheckedChanged(isChecked, getAdapterPosition());
                 }
             });
+
+            StateListDrawable scaleDrawable = (StateListDrawable) favoriteButton.getBackground();
+            scaleDrawable.setLevel(5000);
         }
 
     }
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
+
         boolean onLongClick(View view, int position);
+
         void onFavoriteCheckedChanged(boolean isChecked, int position);
     }
 
