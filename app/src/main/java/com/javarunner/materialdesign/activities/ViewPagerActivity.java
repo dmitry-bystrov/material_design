@@ -16,9 +16,10 @@ public class ViewPagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTheme(ThemeUtils.getThemeStyleResourceID());
         setContentView(R.layout.activity_view_pager);
+        supportPostponeEnterTransition();
 
         ViewPager viewPager = findViewById(R.id.view_pager);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this, ImageFilesUtils.getPhotoInfoList());
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(ImageFilesUtils.getPhotoInfoList(), this);
         viewPager.setAdapter(viewPagerAdapter);
 
         Bundle bundle = getIntent().getExtras();

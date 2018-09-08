@@ -72,14 +72,13 @@ public class MainFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 String filePath = ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position);
-//                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-//                        view, filePath);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
+                        view, filePath);
 
                 //Intent intent = new Intent(getActivity(), PhotoViewActivity.class); // открыть фото в полный размер в новой активити
                 Intent intent = new Intent(getActivity(), ViewPagerActivity.class); // открыть фото в полный размер во вьюпейджере
                 intent.putExtra(getString(R.string.image_file_path), filePath);
-                //startActivity(intent, options.toBundle());
-                startActivity(intent);
+                startActivity(intent, options.toBundle());
             }
 
             @Override

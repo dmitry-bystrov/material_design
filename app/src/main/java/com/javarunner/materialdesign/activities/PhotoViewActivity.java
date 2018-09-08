@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.javarunner.materialdesign.R;
 import com.javarunner.materialdesign.utils.ThemeUtils;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -17,6 +18,7 @@ public class PhotoViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTheme(ThemeUtils.getThemeStyleResourceID());
         setContentView(R.layout.activity_photo_view);
+        supportPostponeEnterTransition();
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -28,7 +30,17 @@ public class PhotoViewActivity extends AppCompatActivity {
                         .load(new File(photoFilePath))
                         .fit()
                         .centerInside()
-                        .into(imageView);
+                        .into(imageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                supportStartPostponedEnterTransition();
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                supportStartPostponedEnterTransition();
+                            }
+                        });
             }
         }
     }
