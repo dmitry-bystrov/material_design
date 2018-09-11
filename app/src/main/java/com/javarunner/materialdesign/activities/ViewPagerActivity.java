@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.javarunner.materialdesign.R;
 import com.javarunner.materialdesign.utils.ImageFilesUtils;
-import com.javarunner.materialdesign.utils.ThemeUtils;
+import com.javarunner.materialdesign.utils.ThemeManager;
 import com.javarunner.materialdesign.adapters.ViewPagerAdapter;
 
 public class ViewPagerActivity extends AppCompatActivity {
@@ -14,7 +14,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(ThemeUtils.getThemeStyleResourceID());
+        setTheme(new ThemeManager(this).getThemeResourceId());
         setContentView(R.layout.activity_view_pager);
         supportPostponeEnterTransition();
 

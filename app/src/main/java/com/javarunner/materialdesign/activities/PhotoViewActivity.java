@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.javarunner.materialdesign.R;
-import com.javarunner.materialdesign.utils.ThemeUtils;
+import com.javarunner.materialdesign.utils.ThemeManager;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -16,7 +16,7 @@ public class PhotoViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(ThemeUtils.getThemeStyleResourceID());
+        setTheme(new ThemeManager(this).getThemeResourceId());
         setContentView(R.layout.activity_photo_view);
         supportPostponeEnterTransition();
 

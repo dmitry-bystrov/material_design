@@ -20,7 +20,7 @@ import com.javarunner.materialdesign.fragments.DatabaseFragment;
 import com.javarunner.materialdesign.fragments.FavoriteFragment;
 import com.javarunner.materialdesign.fragments.MainFragment;
 import com.javarunner.materialdesign.fragments.NetworkFragment;
-import com.javarunner.materialdesign.utils.ThemeUtils;
+import com.javarunner.materialdesign.utils.ThemeManager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -66,12 +66,14 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout drawer;
     private int currentTheme;
+    private ThemeManager themeManager;
     private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentTheme = ThemeUtils.getThemeStyleResourceID();
+        themeManager = new ThemeManager(this);
+        currentTheme = themeManager.getThemeResourceId();
         setTheme(currentTheme);
         setContentView(R.layout.activity_main);
 
@@ -157,7 +159,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (currentTheme != ThemeUtils.getThemeStyleResourceID()) {
+        if (currentTheme != themeManager.getThemeResourceId()) {
             startActivity(new Intent(this, getClass()));
             finish();
         }
