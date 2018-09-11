@@ -38,7 +38,7 @@ public class MainFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         restoreFile(savedInstanceState);
-        camera = new Camera(getContext());
+        camera = new Camera(this);
         snackBar = new SnackBar(getContext(), getActivity().findViewById(R.id.coordinator_layout));
     }
 
@@ -123,7 +123,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 photoFile = new File(ImageFilesUtils.getFilesDir(), ImageFilesUtils.getNewFilename());
-                if (!camera.takePicture(photoFile)) {
+                if (!camera.takePicture(photoFile, REQUEST_CODE)) {
                     snackBar.show(R.string.error_camera);
                 }
             }

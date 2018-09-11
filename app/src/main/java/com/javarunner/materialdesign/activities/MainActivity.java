@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private DrawerLayout drawer;
-    private int currentTheme;
     private ThemeManager themeManager;
     private BottomNavigationView bottomNavigationView;
 
@@ -73,8 +72,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         themeManager = new ThemeManager(this);
-        currentTheme = themeManager.getThemeResourceId();
-        setTheme(currentTheme);
+        setTheme(themeManager.getThemeResourceId());
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -159,7 +157,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (currentTheme != themeManager.getThemeResourceId()) {
+        if (themeManager.themeChanged()) {
             startActivity(new Intent(this, getClass()));
             finish();
         }

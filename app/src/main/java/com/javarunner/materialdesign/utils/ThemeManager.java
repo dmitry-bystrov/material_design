@@ -20,12 +20,22 @@ public class ThemeManager {
         this.themes.add(R.style.AppTheme_CyanDeepOrangeTheme);
         this.themes.add(R.style.AppTheme_BlueGreyOrangeTheme);
         this.preferences = new Preferences(context, R.string.theme_preference);
+        loadThemeIndex();
+    }
+
+    private void loadThemeIndex() {
         this.themeIndex = preferences.loadInteger(R.string.theme_preference, 0);
     }
 
     public void saveThemeIndex(int themeIndex) {
         this.themeIndex = themeIndex;
         preferences.saveInteger(R.string.theme_preference, themeIndex);
+    }
+
+    public boolean themeChanged() {
+        int index = themeIndex;
+        loadThemeIndex();
+        return index != themeIndex;
     }
 
     public int getThemeIndex() {
