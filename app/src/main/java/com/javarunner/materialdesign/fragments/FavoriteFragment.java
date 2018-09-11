@@ -21,15 +21,23 @@ import com.javarunner.materialdesign.adapters.DiffUtilCallback;
 import com.javarunner.materialdesign.adapters.PhotoListAdapter;
 import com.javarunner.materialdesign.models.PhotoInfo;
 import com.javarunner.materialdesign.utils.ImageFilesUtils;
+import com.javarunner.materialdesign.utils.SnackBar;
 
 import java.util.List;
 
 public class FavoriteFragment extends Fragment {
     private PhotoListAdapter photoListAdapter;
     private ImageView imageView;
+    private SnackBar snackBar;
 
     public static FavoriteFragment newInstance() {
         return new FavoriteFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        snackBar = new SnackBar(getContext(), getActivity().findViewById(R.id.coordinator_layout));
     }
 
     @Nullable
@@ -63,9 +71,7 @@ public class FavoriteFragment extends Fragment {
                 String filePath = ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position);
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
                         view, filePath);
-
-                Intent intent = new Intent(getActivity(), PhotoViewActivity.class); // открыть фото в полный размер в новой активити
-                //Intent intent = new Intent(getActivity(), ViewPagerActivity.class); // открыть фото в полный размер во вьюпейджере
+                Intent intent = new Intent(getActivity(), PhotoViewActivity.class);
                 intent.putExtra(getString(R.string.image_file_path), filePath);
                 startActivity(intent, options.toBundle());
             }
@@ -78,8 +84,8 @@ public class FavoriteFragment extends Fragment {
                     public void onButtonClick(DialogInterface dialog, int which) {
                         String imageFilePath = ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position);
                         if (ImageFilesUtils.deleteFile(imageFilePath)) {
-                            dispatchUpdates(ImageFilesUtils.getFavoritePhotoInfoList());
-                            showSnackBar(R.string.photo_deleted);
+                            photoListAdapter.dispatchUpdates(ImageFilesUtils.getFavoritePhotoInfoList());
+                            snackBar.show(R.string.photo_deleted);
                         }
                     }
                 });
@@ -92,7 +98,7 @@ public class FavoriteFragment extends Fragment {
             public void onFavoriteCheckedChanged(boolean isChecked, int position) {
                 if (!isChecked) {
                     ImageFilesUtils.removeFromFavoriteList(ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position));
-                    dispatchUpdates(ImageFilesUtils.getFavoritePhotoInfoList());
+                    photoListAdapter.dispatchUpdates(ImageFilesUtils.getFavoritePhotoInfoList());
 
                     if (photoListAdapter.getItemCount() == 0) {
                         imageView.setVisibility(View.VISIBLE);
@@ -102,17 +108,4 @@ public class FavoriteFragment extends Fragment {
         });
     }
 
-    private void showSnackBar(int messageId) {
-        Snackbar.make(getActivity().findViewById(R.id.coordinator_layout),
-                getString(messageId),
-                Snackbar.LENGTH_SHORT).show();
-    }
-
-    private void dispatchUpdates(List<PhotoInfo> newPhotoInfoList) {
-        DiffUtilCallback diffUtilCallback =
-                new DiffUtilCallback(photoListAdapter.getPhotoInfoList(), newPhotoInfoList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-        photoListAdapter.setPhotoInfoList(newPhotoInfoList);
-        diffResult.dispatchUpdatesTo(photoListAdapter);
-    }
 }

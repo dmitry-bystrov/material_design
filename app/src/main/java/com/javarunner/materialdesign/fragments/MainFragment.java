@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,18 +16,18 @@ import android.view.ViewGroup;
 
 import com.javarunner.materialdesign.R;
 import com.javarunner.materialdesign.activities.ViewPagerActivity;
-import com.javarunner.materialdesign.adapters.DiffUtilCallback;
 import com.javarunner.materialdesign.adapters.PhotoListAdapter;
-import com.javarunner.materialdesign.models.PhotoInfo;
-import com.javarunner.materialdesign.utils.CameraUtils;
+import com.javarunner.materialdesign.utils.Camera;
 import com.javarunner.materialdesign.utils.ImageFilesUtils;
+import com.javarunner.materialdesign.utils.SnackBar;
 
 import java.io.File;
-import java.util.List;
 
 public class MainFragment extends Fragment {
     private static final int REQUEST_CODE = 100;
     private File photoFile;
+    private Camera camera;
+    private SnackBar snackBar;
     private PhotoListAdapter photoListAdapter;
 
     public static MainFragment newInstance() {
@@ -40,6 +38,8 @@ public class MainFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         restoreFile(savedInstanceState);
+        camera = new Camera(getContext());
+        snackBar = new SnackBar(getContext(), getActivity().findViewById(R.id.coordinator_layout));
     }
 
     @Nullable
@@ -74,9 +74,7 @@ public class MainFragment extends Fragment {
                 String filePath = ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position);
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
                         view, filePath);
-
-                //Intent intent = new Intent(getActivity(), PhotoViewActivity.class); // открыть фото в полный размер в новой активити
-                Intent intent = new Intent(getActivity(), ViewPagerActivity.class); // открыть фото в полный размер во вьюпейджере
+                Intent intent = new Intent(getActivity(), ViewPagerActivity.class);
                 intent.putExtra(getString(R.string.image_file_path), filePath);
                 startActivity(intent, options.toBundle());
             }
@@ -89,8 +87,8 @@ public class MainFragment extends Fragment {
                     public void onButtonClick(DialogInterface dialog, int which) {
                         String imageFilePath = ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position);
                         if (ImageFilesUtils.deleteFile(imageFilePath)) {
-                            dispatchUpdates(ImageFilesUtils.removeItemFromList(photoListAdapter.getPhotoInfoList(), position));
-                            showSnackBar(R.string.photo_deleted);
+                            photoListAdapter.dispatchUpdates(ImageFilesUtils.removeItemFromList(photoListAdapter.getPhotoInfoList(), position));
+                            snackBar.show(R.string.photo_deleted);
                         }
                     }
                 });
@@ -125,12 +123,8 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 photoFile = new File(ImageFilesUtils.getFilesDir(), ImageFilesUtils.getNewFilename());
-                Intent cameraIntent = CameraUtils.getCameraIntent(getActivity(), photoFile);
-
-                if (cameraIntent == null) {
-                    showSnackBar(R.string.error_camera);
-                } else {
-                    startActivityForResult(cameraIntent, REQUEST_CODE);
+                if (!camera.takePicture(photoFile)) {
+                    snackBar.show(R.string.error_camera);
                 }
             }
         });
@@ -149,24 +143,9 @@ public class MainFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
-            CameraUtils.revokeUriPermission(getActivity(), photoFile);
-            dispatchUpdates(ImageFilesUtils.getPhotoInfoList());
-            showSnackBar(R.string.photo_added);
+            camera.revokeUriPermission(photoFile);
+            photoListAdapter.dispatchUpdates(ImageFilesUtils.getPhotoInfoList());
+            snackBar.show(R.string.photo_added);
         }
     }
-
-    private void showSnackBar(int messageId) {
-        Snackbar.make(getActivity().findViewById(R.id.coordinator_layout),
-                getString(messageId),
-                Snackbar.LENGTH_SHORT).show();
-    }
-
-    private void dispatchUpdates(List<PhotoInfo> newPhotoInfoList) {
-        DiffUtilCallback diffUtilCallback =
-                new DiffUtilCallback(photoListAdapter.getPhotoInfoList(), newPhotoInfoList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-        photoListAdapter.setPhotoInfoList(newPhotoInfoList);
-        diffResult.dispatchUpdatesTo(photoListAdapter);
-    }
-
 }
