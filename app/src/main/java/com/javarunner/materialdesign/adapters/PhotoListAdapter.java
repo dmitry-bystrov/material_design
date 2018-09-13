@@ -11,14 +11,13 @@ import android.widget.ImageView;
 import android.widget.ToggleButton;
 
 import com.javarunner.materialdesign.R;
-import com.javarunner.materialdesign.models.PhotoInfo;
+import com.javarunner.materialdesign.models.PhotoInfoList;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.List;
 
 public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.ViewHolder> {
-    private List<PhotoInfo> photoInfoList;
+    private PhotoInfoList photoInfoList;
     private OnItemClickListener itemClickListener;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -74,7 +73,7 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
         this.itemClickListener = itemClickListener;
     }
 
-    public PhotoListAdapter(List<PhotoInfo> photoInfoList) {
+    public PhotoListAdapter(PhotoInfoList photoInfoList) {
         this.photoInfoList = photoInfoList;
     }
 
@@ -86,7 +85,7 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String filePath = photoInfoList.get(position).getFilePath();
+        String filePath = photoInfoList.getItem(position).getFilePath();
         holder.imageView.setTransitionName(filePath);
         Picasso.get()
                 .load(new File(filePath))
@@ -94,7 +93,7 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
                 .centerCrop()
                 .into(holder.imageView);
 
-        holder.favoriteButton.setChecked(photoInfoList.get(position).isFavorite());
+        holder.favoriteButton.setChecked(photoInfoList.getItem(position).isFavorite());
     }
 
     @Override
@@ -102,13 +101,13 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
         return photoInfoList.size();
     }
 
-    public List<PhotoInfo> getPhotoInfoList() {
+    public PhotoInfoList getPhotoInfoList() {
         return photoInfoList;
     }
 
-    public void dispatchUpdates(List<PhotoInfo> newPhotoInfoList) {
+    public void dispatchUpdates(PhotoInfoList newPhotoInfoList) {
         DiffUtilCallback diffUtilCallback =
-                new DiffUtilCallback(photoInfoList, newPhotoInfoList);
+                new DiffUtilCallback(photoInfoList.getList(), newPhotoInfoList.getList());
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
         photoInfoList = newPhotoInfoList;
         diffResult.dispatchUpdatesTo(this);

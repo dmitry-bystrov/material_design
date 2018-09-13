@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,18 +16,17 @@ import android.widget.ImageView;
 
 import com.javarunner.materialdesign.R;
 import com.javarunner.materialdesign.activities.PhotoViewActivity;
-import com.javarunner.materialdesign.adapters.DiffUtilCallback;
 import com.javarunner.materialdesign.adapters.PhotoListAdapter;
 import com.javarunner.materialdesign.models.PhotoInfo;
-import com.javarunner.materialdesign.utils.ImageFilesUtils;
-import com.javarunner.materialdesign.utils.SnackBar;
+import com.javarunner.materialdesign.models.PhotoInfoList;
+import com.javarunner.materialdesign.utils.FilesUtils;
 
-import java.util.List;
+import java.io.File;
 
 public class FavoriteFragment extends Fragment {
+    private File filesDir;
     private PhotoListAdapter photoListAdapter;
     private ImageView imageView;
-    private SnackBar snackBar;
 
     public static FavoriteFragment newInstance() {
         return new FavoriteFragment();
@@ -37,7 +35,7 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        snackBar = new SnackBar(getContext(), getActivity().findViewById(R.id.coordinator_layout));
+        filesDir = FilesUtils.getFilesDir(getContext());
     }
 
     @Nullable
@@ -62,13 +60,13 @@ public class FavoriteFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.gallery_columns)));
-        photoListAdapter = new PhotoListAdapter(ImageFilesUtils.getFavoritePhotoInfoList());
+        photoListAdapter = new PhotoListAdapter(new PhotoInfoList(getContext(), filesDir, true));
         recyclerView.setAdapter(photoListAdapter);
 
         photoListAdapter.setOnItemClickListener(new PhotoListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                String filePath = ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position);
+                String filePath = photoListAdapter.getPhotoInfoList().getItem(position).getFilePath();
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
                         view, filePath);
                 Intent intent = new Intent(getActivity(), PhotoViewActivity.class);
@@ -82,10 +80,17 @@ public class FavoriteFragment extends Fragment {
                 fileDeleteDialog.setOnButtonClickListener(new FileDeleteDialog.OnButtonClickListener() {
                     @Override
                     public void onButtonClick(DialogInterface dialog, int which) {
-                        String imageFilePath = ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position);
-                        if (ImageFilesUtils.deleteFile(imageFilePath)) {
-                            photoListAdapter.dispatchUpdates(ImageFilesUtils.getFavoritePhotoInfoList());
-                            snackBar.show(R.string.photo_deleted);
+                        PhotoInfoList photoInfoList = photoListAdapter.getPhotoInfoList();
+                        PhotoInfo photoInfo = photoInfoList.getItem(position);
+
+                        if (photoInfoList.deleteFile(position)) {
+                            if (photoInfo.isFavorite()) {
+                                photoInfoList.setFavorite(position, false);
+                            }
+
+                            photoListAdapter.dispatchUpdates(new PhotoInfoList(getContext(), filesDir, true));
+                            Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getString(R.string.photo_deleted), Snackbar.LENGTH_SHORT)
+                                    .show();
                         }
                     }
                 });
@@ -96,13 +101,11 @@ public class FavoriteFragment extends Fragment {
 
             @Override
             public void onFavoriteCheckedChanged(boolean isChecked, int position) {
-                if (!isChecked) {
-                    ImageFilesUtils.removeFromFavoriteList(ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position));
-                    photoListAdapter.dispatchUpdates(ImageFilesUtils.getFavoritePhotoInfoList());
+                photoListAdapter.getPhotoInfoList().setFavorite(position, isChecked);
+                photoListAdapter.dispatchUpdates(new PhotoInfoList(getContext(), filesDir, true));
 
-                    if (photoListAdapter.getItemCount() == 0) {
-                        imageView.setVisibility(View.VISIBLE);
-                    }
+                if (photoListAdapter.getItemCount() == 0) {
+                    imageView.setVisibility(View.VISIBLE);
                 }
             }
         });

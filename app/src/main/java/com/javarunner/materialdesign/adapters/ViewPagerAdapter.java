@@ -1,7 +1,5 @@
 package com.javarunner.materialdesign.adapters;
 
-import android.app.Activity;
-import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -9,19 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.javarunner.materialdesign.models.PhotoInfo;
 import com.javarunner.materialdesign.R;
+import com.javarunner.materialdesign.models.PhotoInfoList;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.List;
 
 public class ViewPagerAdapter extends PagerAdapter {
-    private List<PhotoInfo> photoInfoList;
+    private PhotoInfoList photoInfoList;
     private AppCompatActivity activity;
 
-    public ViewPagerAdapter(List<PhotoInfo> photoInfoList, AppCompatActivity activity) {
+    public ViewPagerAdapter(PhotoInfoList photoInfoList, AppCompatActivity activity) {
         this.photoInfoList = photoInfoList;
         this.activity = activity;
     }
@@ -47,7 +44,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .inflate(R.layout.pager_item_photo, container, false);
 
         ImageView imageView = pagerItemView.findViewById(R.id.image_view);
-        String filePath = photoInfoList.get(position).getFilePath();
+        String filePath = photoInfoList.getItem(position).getFilePath();
         imageView.setTransitionName(filePath);
         Picasso.get()
                 .load(new File(filePath))
@@ -69,7 +66,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         return pagerItemView;
     }
 
-    public List<PhotoInfo> getPhotoInfoList() {
+    public PhotoInfoList getPhotoInfoList() {
         return photoInfoList;
     }
 }
