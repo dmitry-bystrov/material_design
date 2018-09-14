@@ -1,12 +1,12 @@
 package com.javarunner.materialdesign.fragments;
 
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,19 +16,26 @@ import android.widget.ImageView;
 
 import com.javarunner.materialdesign.R;
 import com.javarunner.materialdesign.activities.PhotoViewActivity;
-import com.javarunner.materialdesign.adapters.DiffUtilCallback;
 import com.javarunner.materialdesign.adapters.PhotoListAdapter;
 import com.javarunner.materialdesign.models.PhotoInfo;
-import com.javarunner.materialdesign.utils.ImageFilesUtils;
+import com.javarunner.materialdesign.models.PhotoInfoList;
+import com.javarunner.materialdesign.utils.FilesUtils;
 
-import java.util.List;
+import java.io.File;
 
 public class FavoriteFragment extends Fragment {
+    private File filesDir;
     private PhotoListAdapter photoListAdapter;
     private ImageView imageView;
 
     public static FavoriteFragment newInstance() {
         return new FavoriteFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        filesDir = FilesUtils.getFilesDir(getContext());
     }
 
     @Nullable
@@ -53,16 +60,18 @@ public class FavoriteFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.gallery_columns)));
-        photoListAdapter = new PhotoListAdapter(ImageFilesUtils.getFavoritePhotoInfoList());
+        photoListAdapter = new PhotoListAdapter(new PhotoInfoList(getContext(), filesDir, true));
         recyclerView.setAdapter(photoListAdapter);
 
         photoListAdapter.setOnItemClickListener(new PhotoListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(), PhotoViewActivity.class); // открыть фото в полный размер в новой активити
-                //Intent intent = new Intent(getActivity(), ViewPagerActivity.class); // открыть фото в полный размер во вьюпейджере
-                intent.putExtra(getString(R.string.image_file_path), ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position));
-                startActivity(intent);
+                String filePath = photoListAdapter.getPhotoInfoList().getItem(position).getFilePath();
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
+                        view, filePath);
+                Intent intent = new Intent(getActivity(), PhotoViewActivity.class);
+                intent.putExtra(getString(R.string.image_file_path), filePath);
+                startActivity(intent, options.toBundle());
             }
 
             @Override
@@ -71,10 +80,17 @@ public class FavoriteFragment extends Fragment {
                 fileDeleteDialog.setOnButtonClickListener(new FileDeleteDialog.OnButtonClickListener() {
                     @Override
                     public void onButtonClick(DialogInterface dialog, int which) {
-                        String imageFilePath = ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position);
-                        if (ImageFilesUtils.deleteFile(imageFilePath)) {
-                            dispatchUpdates(ImageFilesUtils.getFavoritePhotoInfoList());
-                            showSnackBar(R.string.photo_deleted);
+                        PhotoInfoList photoInfoList = photoListAdapter.getPhotoInfoList();
+                        PhotoInfo photoInfo = photoInfoList.getItem(position);
+
+                        if (photoInfoList.deleteFile(position)) {
+                            if (photoInfo.isFavorite()) {
+                                photoInfoList.setFavorite(position, false);
+                            }
+
+                            photoListAdapter.dispatchUpdates(new PhotoInfoList(getContext(), filesDir, true));
+                            Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getString(R.string.photo_deleted), Snackbar.LENGTH_SHORT)
+                                    .show();
                         }
                     }
                 });
@@ -85,29 +101,14 @@ public class FavoriteFragment extends Fragment {
 
             @Override
             public void onFavoriteCheckedChanged(boolean isChecked, int position) {
-                if (!isChecked) {
-                    ImageFilesUtils.removeFromFavoriteList(ImageFilesUtils.getImageFilePath(photoListAdapter.getPhotoInfoList(), position));
-                    dispatchUpdates(ImageFilesUtils.getFavoritePhotoInfoList());
+                photoListAdapter.getPhotoInfoList().setFavorite(position, isChecked);
+                photoListAdapter.dispatchUpdates(new PhotoInfoList(getContext(), filesDir, true));
 
-                    if (photoListAdapter.getItemCount() == 0) {
-                        imageView.setVisibility(View.VISIBLE);
-                    }
+                if (photoListAdapter.getItemCount() == 0) {
+                    imageView.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
 
-    private void showSnackBar(int messageId) {
-        Snackbar.make(getActivity().findViewById(R.id.coordinator_layout),
-                getString(messageId),
-                Snackbar.LENGTH_SHORT).show();
-    }
-
-    private void dispatchUpdates(List<PhotoInfo> newPhotoInfoList) {
-        DiffUtilCallback diffUtilCallback =
-                new DiffUtilCallback(photoListAdapter.getPhotoInfoList(), newPhotoInfoList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-        photoListAdapter.setPhotoInfoList(newPhotoInfoList);
-        diffResult.dispatchUpdatesTo(photoListAdapter);
-    }
 }
