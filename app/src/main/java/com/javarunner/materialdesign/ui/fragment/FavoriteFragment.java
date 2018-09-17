@@ -1,4 +1,4 @@
-package com.javarunner.materialdesign.fragments;
+package com.javarunner.materialdesign.ui.fragment;
 
 import android.app.ActivityOptions;
 import android.content.DialogInterface;
@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.javarunner.materialdesign.R;
-import com.javarunner.materialdesign.activities.PhotoViewActivity;
+import com.javarunner.materialdesign.ui.activity.PhotoViewActivity;
 import com.javarunner.materialdesign.adapters.PhotoListAdapter;
-import com.javarunner.materialdesign.models.PhotoInfo;
-import com.javarunner.materialdesign.models.PhotoInfoList;
+import com.javarunner.materialdesign.model.PhotoInfo;
+import com.javarunner.materialdesign.model.PhotoInfoList;
 import com.javarunner.materialdesign.utils.FilesUtils;
 
 import java.io.File;

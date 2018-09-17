@@ -3,6 +3,8 @@ package com.javarunner.materialdesign.utils;
 import android.content.Context;
 import android.os.Environment;
 
+import com.javarunner.materialdesign.ApplicationContext;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,7 +17,8 @@ public class FilesUtils {
         return String.format("%s%s%s", "IMG_", simpleDateFormat.format(new Date()), ".jpg");
     }
 
-    public static File getFilesDir(Context context) {
+    public static File getFilesDir() {
+        Context context = ApplicationContext.getContext();
         File filesDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if (filesDir == null) {
             filesDir = context.getFilesDir();

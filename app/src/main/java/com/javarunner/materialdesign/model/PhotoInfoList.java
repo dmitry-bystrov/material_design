@@ -1,8 +1,5 @@
-package com.javarunner.materialdesign.models;
+package com.javarunner.materialdesign.model;
 
-import android.content.Context;
-
-import com.javarunner.materialdesign.R;
 import com.javarunner.materialdesign.utils.Preferences;
 
 import java.io.File;
@@ -14,14 +11,13 @@ import java.util.Set;
 public class PhotoInfoList {
     private List<PhotoInfo> data;
     private Preferences preferences;
-    private final int prefKey = R.string.favorite_preference;
 
-    public PhotoInfoList(Context context, File directory, boolean favoritesOnly) {
+    public PhotoInfoList(Preferences preferences, File directory, boolean favoritesOnly) {
         this.data = new ArrayList<>();
-        this.preferences = new Preferences(context, prefKey);
+        this.preferences = preferences;
 
         File[] files = directory.listFiles();
-        Set<String> favoriteStringSet = preferences.loadStringSet(prefKey, new HashSet<String>());
+        Set<String> favoriteStringSet = preferences.loadStringSet(new HashSet<String>());
 
         if (files != null) {
             for (File file : files) {
@@ -57,20 +53,4 @@ public class PhotoInfoList {
         return -1;
     }
 
-    public boolean deleteFile(int index) {
-        return new File(data.get(index).getFilePath()).delete();
-    }
-
-    public void setFavorite(int index, boolean favorite) {
-        Set<String> stringSet = preferences.loadStringSet(prefKey, new HashSet<String>());
-
-        if (favorite) {
-            stringSet.add(data.get(index).getFilePath());
-        } else {
-            stringSet.remove(data.get(index).getFilePath());
-        }
-
-        preferences.saveStringSet(prefKey, stringSet);
-        data.get(index).setFavorite(favorite);
-    }
 }

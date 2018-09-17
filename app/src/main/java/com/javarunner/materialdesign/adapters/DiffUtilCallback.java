@@ -2,7 +2,7 @@ package com.javarunner.materialdesign.adapters;
 
 import android.support.v7.util.DiffUtil;
 
-import com.javarunner.materialdesign.models.PhotoInfo;
+import com.javarunner.materialdesign.model.PhotoInfo;
 
 import java.util.List;
 

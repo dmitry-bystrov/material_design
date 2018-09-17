@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.javarunner.materialdesign.R;
-import com.javarunner.materialdesign.models.PhotoInfoList;
+import com.javarunner.materialdesign.model.PhotoInfoList;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 

@@ -1,4 +1,4 @@
-package com.javarunner.materialdesign.fragments;
+package com.javarunner.materialdesign.ui.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

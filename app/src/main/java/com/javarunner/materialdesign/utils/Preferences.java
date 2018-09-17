@@ -3,40 +3,38 @@ package com.javarunner.materialdesign.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.javarunner.materialdesign.ApplicationContext;
+
 import java.util.Set;
 
 public class Preferences {
-    private Context context;
-    private String fileName;
+    private static final String INTEGER_VALUE = "integer_value";
+    private static final String STRING_SET = "string_set";
+    private SharedPreferences sharedPreferences;
 
-    public Preferences(Context context, int fileNameStringID) {
-        this.context = context;
-        this.fileName = context.getString(fileNameStringID);
+    public Preferences(String fileName) {
+        this.sharedPreferences = ApplicationContext.getContext().getSharedPreferences(fileName, Context.MODE_PRIVATE);
     }
 
-    private SharedPreferences getSharedPreferences() {
-        return context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-    }
-
-    public void saveInteger(int keyStringID, int value) {
-        SharedPreferences.Editor editor = getSharedPreferences().edit();
+    public void saveInteger(int value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
-        editor.putInt(context.getString(keyStringID), value);
+        editor.putInt(INTEGER_VALUE, value);
         editor.apply();
     }
 
-    public void saveStringSet(int keyStringID, Set<String> value) {
-        SharedPreferences.Editor editor = getSharedPreferences().edit();
+    public void saveStringSet(Set<String> value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
-        editor.putStringSet(context.getString(keyStringID), value);
+        editor.putStringSet(STRING_SET, value);
         editor.apply();
     }
 
-    public int loadInteger(int keyStringID, int defValue) {
-        return getSharedPreferences().getInt(context.getString(keyStringID), defValue);
+    public int loadInteger(int defValue) {
+        return sharedPreferences.getInt(INTEGER_VALUE, defValue);
     }
 
-    public Set<String> loadStringSet(int keyStringID, Set<String> defValue) {
-        return getSharedPreferences().getStringSet(context.getString(keyStringID), defValue);
+    public Set<String> loadStringSet(Set<String> defValue) {
+        return sharedPreferences.getStringSet(STRING_SET, defValue);
     }
 }

@@ -1,4 +1,4 @@
-package com.javarunner.materialdesign.fragments;
+package com.javarunner.materialdesign.ui.fragment;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -8,26 +8,31 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.javarunner.materialdesign.R;
-import com.javarunner.materialdesign.activities.ViewPagerActivity;
 import com.javarunner.materialdesign.adapters.PhotoListAdapter;
-import com.javarunner.materialdesign.models.PhotoInfo;
-import com.javarunner.materialdesign.models.PhotoInfoList;
+import com.javarunner.materialdesign.model.PhotoInfo;
+import com.javarunner.materialdesign.model.PhotoInfoList;
+import com.javarunner.materialdesign.presentation.presenter.PhotoListPresenter;
+import com.javarunner.materialdesign.presentation.view.PhotoListView;
+import com.javarunner.materialdesign.ui.activity.ViewPagerActivity;
 import com.javarunner.materialdesign.utils.Camera;
 import com.javarunner.materialdesign.utils.FilesUtils;
 
 import java.io.File;
+import java.util.List;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends MvpAppCompatFragment implements PhotoListView {
     private static final int REQUEST_CODE = 100;
-    private File filesDir;
     private File photoFile;
     private Camera camera;
     private PhotoListAdapter photoListAdapter;
@@ -36,12 +41,20 @@ public class MainFragment extends Fragment {
         return new MainFragment();
     }
 
+    @InjectPresenter
+    PhotoListPresenter photoListPresenter;
+
+    @ProvidePresenter
+    public PhotoListPresenter providePhotoListPresenter() {
+        photoListPresenter = new PhotoListPresenter(false);
+        return photoListPresenter;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         restoreFile(savedInstanceState);
         camera = new Camera(this);
-        filesDir = FilesUtils.getFilesDir(getContext());
     }
 
     @Nullable
@@ -67,13 +80,13 @@ public class MainFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.gallery_columns)));
-        photoListAdapter = new PhotoListAdapter(new PhotoInfoList(getContext(), filesDir, false));
+        photoListAdapter = new PhotoListAdapter();
         recyclerView.setAdapter(photoListAdapter);
 
         photoListAdapter.setOnItemClickListener(new PhotoListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                String filePath = photoListAdapter.getPhotoInfoList().getItem(position).getFilePath();
+                String filePath = photoListAdapter.getPhotoInfoList().get(position).getFilePath();
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
                         view, filePath);
                 Intent intent = new Intent(getActivity(), ViewPagerActivity.class);
@@ -87,22 +100,15 @@ public class MainFragment extends Fragment {
                 fileDeleteDialog.setOnButtonClickListener(new FileDeleteDialog.OnButtonClickListener() {
                     @Override
                     public void onButtonClick(DialogInterface dialog, int which) {
-                        PhotoInfoList photoInfoList = photoListAdapter.getPhotoInfoList();
-                        PhotoInfo photoInfo = photoInfoList.getItem(position);
-
-                        if (photoInfoList.deleteFile(position)) {
-                            if (photoInfo.isFavorite()) {
-                                photoInfoList.setFavorite(position, false);
-                            }
-
-                            photoListAdapter.dispatchUpdates(new PhotoInfoList(getContext(), filesDir, false));
-                            Snackbar.make(findCoordinatorLayout(), getString(R.string.photo_deleted), Snackbar.LENGTH_SHORT)
-                                    .show();
-                        }
+                        photoListPresenter.onFileDeleteCommand(position);
                     }
                 });
 
-                fileDeleteDialog.show(getFragmentManager(), getString(R.string.file_delete_dialog));
+                FragmentManager fragmentManager = getFragmentManager();
+                if (fragmentManager != null) {
+                    fileDeleteDialog.show(getFragmentManager(), getString(R.string.file_delete_dialog));
+                }
+
                 return true;
             }
 
@@ -156,7 +162,27 @@ public class MainFragment extends Fragment {
         }
     }
 
+    @Nullable
     private View findCoordinatorLayout() {
-        return getActivity().findViewById(R.id.coordinator_layout);
+        Activity activity = getActivity();
+        if (activity != null) {
+            return getActivity().findViewById(R.id.coordinator_layout);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void showFileDeleteMessage() {
+        View coordinatorLayout = findCoordinatorLayout();
+        if (coordinatorLayout != null) {
+            Snackbar.make(coordinatorLayout, getString(R.string.photo_deleted), Snackbar.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    @Override
+    public void updatePhotoListAdapter(List<PhotoInfo> newData) {
+        photoListAdapter.dispatchUpdates(newData);
     }
 }
