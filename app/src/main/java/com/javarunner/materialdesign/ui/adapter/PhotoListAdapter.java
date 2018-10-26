@@ -1,4 +1,4 @@
-package com.javarunner.materialdesign.adapters;
+package com.javarunner.materialdesign.ui.adapter;
 
 import android.graphics.drawable.StateListDrawable;
 import android.support.v7.util.DiffUtil;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.ToggleButton;
 
 import com.javarunner.materialdesign.R;
-import com.javarunner.materialdesign.model.PhotoInfo;
+import com.javarunner.materialdesign.model.database.entity.Photo;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.ViewHolder> {
-    private List<PhotoInfo> photoInfoList;
+    private List<Photo> photoList;
     private OnItemClickListener itemClickListener;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -78,19 +78,19 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
     }
 
     public PhotoListAdapter() {
-        this.photoInfoList = new ArrayList<>();
+        this.photoList = new ArrayList<>();
     }
 
     @NotNull
     @Override
     public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_photo, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NotNull ViewHolder holder, int position) {
-        String filePath = photoInfoList.get(position).getFilePath();
+        String filePath = photoList.get(position).getFilePath();
         holder.imageView.setTransitionName(filePath);
         Picasso.get()
                 .load(new File(filePath))
@@ -98,27 +98,27 @@ public class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.View
                 .centerCrop()
                 .into(holder.imageView);
 
-        holder.favoriteButton.setChecked(photoInfoList.get(position).isFavorite());
+        holder.favoriteButton.setChecked(photoList.get(position).isFavorite());
     }
 
     @Override
     public int getItemCount() {
-        return photoInfoList.size();
+        return photoList.size();
     }
 
-    public void dispatchUpdates(List<PhotoInfo> newPhotoInfoList) {
+    public void dispatchUpdates(List<Photo> newPhotoList) {
         DiffUtilCallback diffUtilCallback =
-                new DiffUtilCallback(photoInfoList, newPhotoInfoList);
+                new DiffUtilCallback(photoList, newPhotoList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-        photoInfoList = newPhotoInfoList;
+        photoList = newPhotoList;
         diffResult.dispatchUpdatesTo(this);
     }
 
-    public List<PhotoInfo> getPhotoInfoList() {
-        return photoInfoList;
+    public List<Photo> getPhotoList() {
+        return photoList;
     }
 
-    public void setPhotoInfoList(List<PhotoInfo> photoInfoList) {
-        this.photoInfoList = photoInfoList;
+    public void setPhotoList(List<Photo> photoList) {
+        this.photoList = photoList;
     }
 }

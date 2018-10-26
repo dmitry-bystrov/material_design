@@ -1,4 +1,4 @@
-package com.javarunner.materialdesign.adapters;
+package com.javarunner.materialdesign.ui.adapter;
 
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;

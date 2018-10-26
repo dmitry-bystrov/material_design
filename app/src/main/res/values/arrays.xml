@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="themes">
+        <item>@style/AppTheme</item>
+        <item>@style/AppTheme.BrownCyanTheme</item>
+        <item>@style/AppTheme.CyanDeepOrangeTheme</item>
+        <item>@style/AppTheme.BlueGreyOrangeTheme</item>
+    </array>
+</resources>

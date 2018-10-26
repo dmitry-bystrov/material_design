@@ -1,16 +1,16 @@
-package com.javarunner.materialdesign.adapters;
+package com.javarunner.materialdesign.ui.adapter;
 
 import android.support.v7.util.DiffUtil;
 
-import com.javarunner.materialdesign.model.PhotoInfo;
+import com.javarunner.materialdesign.model.database.entity.Photo;
 
 import java.util.List;
 
 public class DiffUtilCallback extends DiffUtil.Callback {
-    private List<PhotoInfo> oldList;
-    private List<PhotoInfo> newList;
+    private List<Photo> oldList;
+    private List<Photo> newList;
 
-    public DiffUtilCallback(List<PhotoInfo> oldList, List<PhotoInfo> newList) {
+    public DiffUtilCallback(List<Photo> oldList, List<Photo> newList) {
         this.oldList = oldList;
         this.newList = newList;
     }
