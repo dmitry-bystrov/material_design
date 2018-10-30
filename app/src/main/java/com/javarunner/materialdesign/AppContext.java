@@ -36,11 +36,6 @@ public class AppContext extends Application {
         return instance;
     }
 
-    //TODO: remove it
-    public static Context getContext() {
-        return instance.getApplicationContext();
-    }
-
     public static File getFilesDirectory() {
         return filesDirectory;
     }

@@ -8,16 +8,12 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import java.io.File;
 
-
 @StateStrategyType(OneExecutionStateStrategy.class)
 public interface CommonView extends MvpView {
-    @StateStrategyType(SkipStrategy.class)
     void takePhoto(File file);
 
-    @StateStrategyType(SkipStrategy.class)
     void revokePermissions(File file);
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
     void updateList();
 
     void showMessage(String text);

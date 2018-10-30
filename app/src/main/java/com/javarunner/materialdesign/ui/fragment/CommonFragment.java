@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
@@ -35,7 +36,9 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class CommonFragment extends BaseMvpFragment implements CommonView {
     private static final int REQUEST_CODE = 100;
+    private static final String FAVORITES = "favorites";
     private CompositeDisposable d;
+    private boolean favorites;
     private RecyclerView recyclerView;
 
     @InjectPresenter
@@ -43,13 +46,25 @@ public class CommonFragment extends BaseMvpFragment implements CommonView {
 
     @ProvidePresenter
     public CommonPresenter provideCommonListPresenter() {
+        Bundle args = getArguments();
+        if (args != null) {
+            favorites = args.getBoolean(FAVORITES);
+        }
+
         presenter = new CommonPresenter(AndroidSchedulers.mainThread(),
-                AppContext.getFilesDirectory());
+                AppContext.getFilesDirectory(),
+                favorites);
+        AppContext.getInstance().getAppComponent().inject(presenter);
         return presenter;
     }
 
-    public static CommonFragment newInstance() {
-        return new CommonFragment();
+    public static CommonFragment newInstance(boolean favorites) {
+        CommonFragment commonFragment = new CommonFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(FAVORITES, favorites);
+        commonFragment.setArguments(args);
+
+        return commonFragment;
     }
 
     @Override

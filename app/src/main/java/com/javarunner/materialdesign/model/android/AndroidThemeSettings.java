@@ -20,8 +20,6 @@ public class AndroidThemeSettings implements ThemeSettings {
         this.preferences = preferences;
         this.themes = getThemes(appContext);
         loadThemeId();
-
-        Timber.d("New AndroidThemeSettings created");
     }
 
     @Override

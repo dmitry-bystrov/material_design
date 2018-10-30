@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 
 import io.reactivex.subjects.PublishSubject;
+import timber.log.Timber;
 
 public class ListViewHolder extends RecyclerView.ViewHolder implements ListItemView {
 
@@ -34,9 +35,13 @@ public class ListViewHolder extends RecyclerView.ViewHolder implements ListItemV
                 .map(o -> new ListEvent(ListEvent.EventType.LONG_CLICK, getAdapterPosition()))
                 .subscribe(events);
 
-        RxCompoundButton.checkedChanges(favoriteButton)
+        RxView.clicks(favoriteButton)
                 .map(o -> new ListEvent(ListEvent.EventType.TOGGLE, getAdapterPosition()))
                 .subscribe(events);
+
+//        RxCompoundButton.checkedChanges(favoriteButton)
+//                .map(initial -> new ListEvent(ListEvent.EventType.TOGGLE, getAdapterPosition()))
+//                .subscribe(events);
 
         StateListDrawable scaleDrawable = (StateListDrawable) favoriteButton.getBackground();
         scaleDrawable.setLevel(5000);

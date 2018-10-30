@@ -3,31 +3,38 @@ package com.javarunner.materialdesign.presentation.presenter;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.javarunner.materialdesign.model.DataSource;
-import com.javarunner.materialdesign.model.LocalStorage;
+import com.javarunner.materialdesign.model.database.entity.Photo;
 import com.javarunner.materialdesign.presentation.view.CommonView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+
+import javax.inject.Inject;
 
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 @InjectViewState
 public class CommonPresenter extends MvpPresenter<CommonView> {
     private Scheduler uiScheduler;
     private File file;
     private File filesDir;
-    private DataSource localStorage;
+    private boolean favorites;
     private ListPresenter listPresenter;
     private CompositeDisposable d;
 
-    public CommonPresenter(Scheduler uiScheduler, File filesDir) {
+    @Inject
+    DataSource dataSource;
+
+    public CommonPresenter(Scheduler uiScheduler, File filesDir, boolean favorites) {
         this.uiScheduler = uiScheduler;
         this.filesDir = filesDir;
-        this.localStorage = new LocalStorage(filesDir);
+        this.favorites = favorites;
         this.listPresenter = new ListPresenter();
         this.d = new CompositeDisposable();
     }
@@ -39,13 +46,30 @@ public class CommonPresenter extends MvpPresenter<CommonView> {
     }
 
     private void loadData() {
-        d.add(localStorage.getPhotos()
+        if (favorites) {
+            loadFavoritePhotos();
+        } else {
+            loadAllPhotos();
+        }
+    }
+
+    private void loadAllPhotos() {
+        d.add(dataSource.getAllPhotos()
                 .subscribeOn(Schedulers.io())
                 .observeOn(uiScheduler)
-                .subscribe(list -> {
-                    listPresenter.setData(list);
-                    getViewState().updateList();
-                }));
+                .subscribe(this::setData));
+    }
+
+    private void loadFavoritePhotos() {
+        d.add(dataSource.getFavoritePhotos()
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(this::setData));
+    }
+
+    private void setData(List<Photo> list) {
+        listPresenter.setData(list);
+        getViewState().updateList();
     }
 
     public void onTakePhotoButtonCLick() {
@@ -56,9 +80,16 @@ public class CommonPresenter extends MvpPresenter<CommonView> {
     }
 
     public void onPhotoTaken() {
-        getViewState().revokePermissions(file);
-        getViewState().showMessageOnPhotoAdded();
-        loadData();
+        Photo newPhoto = new Photo(file.getPath(), false);
+        d.add(dataSource.addPhoto(newPhoto)
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(() -> {
+                    listPresenter.getData().add(newPhoto);
+                    getViewState().revokePermissions(file);
+                    getViewState().showMessageOnPhotoAdded();
+                    getViewState().updateList();
+                }));
     }
 
     public ListPresenter getListPresenter() {
@@ -66,15 +97,24 @@ public class CommonPresenter extends MvpPresenter<CommonView> {
     }
 
     public void onItemClick(int position) {
-
+        Timber.d("onItemClick(%d)", position);
     }
 
     public void onItemLongClick(int position) {
-
+        Timber.d("onItemLongClick(%d)", position);
     }
 
     public void onFavoriteToggle(int position) {
-
+        Photo photo = listPresenter.getData().get(position);
+        photo.setFavorite(!photo.isFavorite());
+        d.add(dataSource.updatePhoto(photo)
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(() -> {
+                    if (favorites) {
+                        loadData();
+                    }
+                }));
     }
 
     //    private static final String FAVORITE_PREFERENCE = "favorite_preference";

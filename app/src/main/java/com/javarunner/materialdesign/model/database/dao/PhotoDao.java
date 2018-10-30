@@ -12,14 +12,20 @@ import java.util.List;
 
 @Dao
 public interface PhotoDao {
-    @Query("SELECT * FROM photos")
+    @Query("SELECT * FROM photo")
     List<Photo> getAll();
 
-    @Query("SELECT * FROM photos WHERE id = :id")
+    @Query("SELECT * FROM photo WHERE favorite = 1")
+    List<Photo> getFavorites();
+
+    @Query("DELETE FROM photo")
+    void deleteAll();
+
+    @Query("SELECT * FROM photo WHERE id = :id")
     Photo getById(long id);
 
     @Insert
-    void insert(Photo photo);
+    long insert(Photo photo);
 
     @Update
     void update(Photo photo);

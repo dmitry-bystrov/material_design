@@ -31,8 +31,6 @@ public class SettingsPresenter extends MvpPresenter<SettingsView> {
                 getViewState().setBlueThemeButtonChecked();
                 break;
         }
-
-        Timber.d("SettingsPresenter: onFirstViewAttach");
     }
 
     public void defaultThemeSelected() {
